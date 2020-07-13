@@ -1,0 +1,54 @@
+
+
+前后端传递数据格式说明：
+
+ajax中参数data中有三类json数据
+分别是：1. "data":前端传递给后台的数据,包括各种数据、以及查询条件等
+	   2. "result":后台传递给前端的结果的key的说明,前端需要哪些返回结果,在result这个数组中说明
+	   3. "username":前端传给后台用户的username
+
+下面对于键值对中的命名做统一规范（不全的大家后面可以自行添加，但同时也要在这个文件中说明）
+data：{
+	"data":{[]},
+	"result":[],
+	"username":username
+}
+
+1. 对于"data"中的key: 
+	- "photoData":上传照片的base64编码数据
+	- "photoPath"：上传照片的路径
+	- "photoName"：上传照片的文件名
+	- "GPS"：照片的地理位置
+	- "formatted_address":照片的格式化地址
+	- "poi":照片周边的pois
+	- "road"：照片周边的roads
+	- "photoLabels":照片的标签
+	- "faceLabel":人俩标签
+	- "face_token"：人脸的唯一标识，人脸检测时获取，上传人脸数据时需要传给后台
+	- "facePath":人脸路径
+	- "queryCondition"：查询雕件，有四个值：
+			"timeQuery","placeQuery","semanticQuery","integratedQuery"
+	- "sharedflag":是否共享,两个值，"1"表示共享,"0"表示取消共享
+	- "startTime":查询的开始时间
+	- "endTime":查询的终止时间
+	- "queryPlace":查询的地点
+	- "queryPhotoLabel":查询的照片标签
+	- "queryFaceLabel":查询的人脸标签,
+	- "username":注册、登录时的用户名
+	- "password":注册、登录时的用户账号密码
+
+2. 对于"result"中的key:
+	- "message":查询或登录或注册消息提醒,两个值，"success"、"failure"
+	- "photoPath":查询的照片路径
+	- "facePath":查询的人脸路径
+	- "formatted_address":结构化地址
+	- "GPS":照片的坐标
+	- "poi":照片周边的pois
+	- "road"：照片周边的roads
+	- "uploadResFlag":上传照片结果，true or false
+	- "updateResFlag":更新结果，true or false
+	- "registerFlag"：注册结果返回，true 表示注册成功，false 表示注册失败
+	- "loginFlag":登录结果返回，true 表示登录成功，false 表示登录失败
+
+
+3. 对于username:登录时获取的用户名字，用来后台查询对应数据库的

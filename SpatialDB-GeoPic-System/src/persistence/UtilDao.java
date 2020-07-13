@@ -44,7 +44,7 @@ public class UtilDao {
         }
     }
 
-    public  static Connection getConnection_SysOpDB(String userDBName) throws Exception{
+    public  static Connection getConnection_UserDB(String userDBName) throws Exception{
         try{
             userDBUrl=userDBUrl+userDBName;
             Class.forName(driver);

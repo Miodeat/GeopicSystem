@@ -34,7 +34,7 @@ public class PhotoDaoImp implements PhotoDao {
         boolean insertPhotoInfoRes = false;
         Connection connection = null;
         try {
-            connection = UtilDao.getConnection_SysOpDB(userInfo.getUserDBName());
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
             String insertPhotoInfoSql="";
             if(photoInfo.getGeo().equals("")){
                  insertPhotoInfoSql = "insert into photos(" +
@@ -89,7 +89,7 @@ public class PhotoDaoImp implements PhotoDao {
         JSONArray timeQueryResArray = new JSONArray();
         Connection connection = null;
         try {
-            connection = UtilDao.getConnection_SysOpDB(userInfo.getUserDBName());
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
             String getTimeQueryPhotoPahtSql = "select photopath,geo from photos " +
                     "where takentime between '"+
                     startTime+"' and '"+endTime+"'";
@@ -142,7 +142,7 @@ public class PhotoDaoImp implements PhotoDao {
         JSONArray placeQueryResArray = new JSONArray();
 //        String place = photoInfo.getFormatted_address();
         try{
-            connection = UtilDao.getConnection_SysOpDB(userInfo.getUserDBName());
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
             String getPlaceQueryPotoPathSql = "select geo,photopath from  photos where " +
                     "formatted_address like '%"+place+"%' " +
                     " or pois::text like '%"+place+"%' " +
@@ -202,7 +202,7 @@ public class PhotoDaoImp implements PhotoDao {
         JSONArray semanticQueryArray = new JSONArray();
 
         try{
-            connection = UtilDao.getConnection_SysOpDB(userInfo.getUserDBName());
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
             String semanticQuerySql = "";
             if(!photoInfo.getPhotoLabels().equals("")){
                 if(!photoInfo.getFacesId().equals("")){
