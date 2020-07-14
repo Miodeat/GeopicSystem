@@ -1,24 +1,14 @@
 MapControl = function (options) {
     let me = this;
 
-    me.ops = $.extend({
-        width: 100,
-        height: 600
-    }, options);
-
-    me.user = me.ops.username;
-
+    me.ops = options;
     me._init()
 };
 
 MapControl.prototype._init = function () {
     let me = this;
 
-    me.div = $("#" + me.ops.div).css({
-        position: "relative",
-        width: me.ops.width + "%",
-        height: me.ops.height + "px"
-    });
+    me.div = $("#" + me.ops.div);
 
     me.map = new AMap.Map(me.ops.div, {
         center: [112.3, 28.9],
@@ -26,10 +16,28 @@ MapControl.prototype._init = function () {
     })
 };
 
-MapControl.prototype.initAsPreview = function () {
+MapControl.prototype.initAsPreview = function (photos) {
     let me = this;
-    let photos = Query({}, ["photoPath", "AMapGPS"], me.user);
+
     me._loadMarkerCluster(photos);
+};
+
+MapControl.prototype.addQueryResult = function(start_time, end_time,
+                                               loc, photo_labels,
+                                               faces, user_name){
+    let me = this;
+    let query_params = {
+        startTime: start_time,
+        endTime: end_time,
+        queryPlace: loc,
+        queryPhotoLabel: photo_labels,
+        queryFaceLabel: faces
+    };
+    let result_type = ["photoPath", "AMapGPS"];
+
+    let photos = Query(query_params, result_type, user_name);
+
+    me._loadMarkers(photos);
 };
 
 MapControl.prototype._loadMarkerCluster = function (photos) {

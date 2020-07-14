@@ -6,11 +6,15 @@
 InitGeoPicDesktop = function (options) {
     let me = this;
     me.getUserPhotosInfo();
+    me.mapControl = new MapControl({
+        div: "map"
+    });
 };
 
 InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
     let me = this;
     let username = $(".username").val();
+    me.username = username;
     let us = $(".username").text();
     console.log(username);
     let result = ["photoCount","placeCount","faceCount","photoPath","GPS"];
@@ -48,6 +52,6 @@ InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCoun
     $(".photoCount").text(photoCount);
     $(".faceCount").text(faceCount);
     $(".placeCount").text(placeCount)
-
+    me.mapControl.initAsPreview(photoPath)
 };
 

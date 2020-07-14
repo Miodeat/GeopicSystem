@@ -23,8 +23,6 @@
 <%--    <link rel="stylesheet" href="static/vendors/selectFX/css/cs-skin-elastic.css">--%>
 <%--    <link rel="stylesheet" href="static/assets/css/style.css">--%>
     <script src="support/jquery-3.4.1.min.js"></script>
-<%--    <script src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8"></script>--%>
-    <script src="static/js/MapControl.js"></script>
     <script type="text/javascript" src="static/js/RegisterAndLogin.js"></script>
     <script>
       // $(document).ready(function () {

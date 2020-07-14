@@ -20,12 +20,17 @@
 <!--<link rel="stylesheet" href="../vendors/selectFX/css/cs-skin-elastic.css">-->
 <!--<link rel="stylesheet" href="../vendors/jqvmap/dist/jqvmap.min.css">-->
 <!--<link rel="stylesheet" href="../assets/css/style.css">-->
+  <script src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8"></script>
   <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
+  <script src="../js/Query.js"></script>
   <script type="text/javascript" src="../js/initGeoPicDesktop.js"></script>
+  <script src="../js/MapControl.js"></script>
 </head>
 
 <script>
-  var initGeoPicDesktopServlet = new InitGeoPicDesktop();
+  $(document).ready(function () {
+    var initGeoPicDesktopServlet = new InitGeoPicDesktop();
+  });
 </script>
 
 <body>
@@ -149,7 +154,7 @@
             <div class="stat-icon dib"><i class="ti-money text-success border-success"></i></div>
             <div class="stat-content dib">
               <div class="stat-text">Total Pic</div>
-              <div class="stat-digit photoCount">1,012</div>
+              <div class="stat-digit photoCount">loading...</div>
             </div>
           </div>
         </div>
@@ -162,7 +167,7 @@
             <div class="stat-icon dib"><i class="ti-user text-primary border-primary"></i></div>
             <div class="stat-content dib">
               <div class="stat-text">Total Face&nbsp;</div>
-              <div class="stat-digit faceCount">961</div>
+              <div class="stat-digit faceCount">loading...</div>
             </div>
           </div>
         </div>
@@ -175,7 +180,7 @@
             <div class="stat-icon dib"><i class="ti-layout-grid2 text-warning border-warning"></i></div>
             <div class="stat-content dib">
               <div class="stat-text">Total Place&nbsp;</div>
-              <div class="stat-digit placeCount">770</div>
+              <div class="stat-digit placeCount">loading...</div>
             </div>
           </div>
         </div>
@@ -186,8 +191,8 @@
         <div class="card-header">
           <h4>Stastic&nbsp;</h4>
         </div>
-        <div class="Vector-map-js">
-          <div id="vmap" class="vmap col-xl-12" style="height: 265px;"></div>
+        <div class="Amap-container">
+          <div id="map" class="col-xl-12" style="height: 265px;"></div>
         </div>
       </div>
       <!-- /# card --> 
