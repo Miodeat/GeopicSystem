@@ -19,6 +19,8 @@ public interface PhotoDao {
 
     public JSONObject getSemanticQueryPhotoPath(PhotoInfo photoInfo,UserInfo userInfo);
 
+    public JSONObject initGeoPicDesktop(PhotoInfo photoInfo,UserInfo userInfo);
+
 
 
 }

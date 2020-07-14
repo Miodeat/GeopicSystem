@@ -11,9 +11,17 @@ import persistence.UtilDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 
 
 public class PhotoDaoImp implements PhotoDao {
+//    private String[]specialCity={"锡林郭勒盟","阿拉善盟","延边朝鲜族自治州","大兴安岭地区","恩施土家族苗族自治州","湘西土家族苗族自治州",
+//    "阿坝藏族羌族自治州","甘孜藏族自治州","凉山彝族自治州","黔西南布依族苗族自治州","黔东南苗族侗族自治州","黔南布依族苗族自治州",
+//            "楚雄彝族自治州","红河哈尼族彝族自治州","文山壮族苗族自治州","西双版纳傣族自治州","大理白族自治州","德宏傣族景颇族自治州",
+//            "怒江傈僳族自治州","迪庆藏族自治州","临夏回族自治州","甘南藏族自治州","海北藏族自治州","黄南藏族自治州","海南藏族自治州","果洛藏族自治州",
+//            "玉树藏族自治州", "海西蒙古族藏族自治州", "阿里地区","阿克苏地区","喀什地区","和田地区","塔城地区", "阿勒泰地区"};
+    private String []spectilCity= {"锡林郭勒盟","阿拉善盟"};
+
     @Override
     /**
      *  将照片上传至数据库：上传的数据有（
@@ -31,6 +39,7 @@ public class PhotoDaoImp implements PhotoDao {
      * @return 返回照片的插入结果：true or false
      */
     public boolean insertPhotoInfo(PhotoInfo photoInfo, UserInfo userInfo) {
+
         boolean insertPhotoInfoRes = false;
         Connection connection = null;
         try {
@@ -125,11 +134,11 @@ public class PhotoDaoImp implements PhotoDao {
      *        {
      *            "placeQueryRes":[
      *            {
-     *                "GPS":"POINT(112.3,28.6)"
+     *                "GPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            },
      *            {
-     *                "GPS":"POINT(112.3,28.6)"
+     *                "GPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            }
      *            ]
@@ -183,13 +192,13 @@ public class PhotoDaoImp implements PhotoDao {
      * @param userInfo: 取用户的数据库名称，用于确定连接哪个数据库
      * @return 返回查询结果的照片及其对应的经纬度，返回数据格式为
      *        {
-     *            "semanticQueryRes":[
+     *            "data":[
      *            {
-     *                "GPS":"POINT(112.3,28.6)"
+     *                "GPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            },
      *            {
-     *                "GPS":"POINT(112.3,28.6)"
+     *                "GPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            }
      *            ]
@@ -233,7 +242,6 @@ public class PhotoDaoImp implements PhotoDao {
                 jsonObject.put("photoPath",path);
                 semanticQueryArray.add(jsonObject);
             }
-
             if(semanticQueryArray.size()>0){
                 semanticQueryRes.put("message","success");
                 semanticQueryRes.put("placeQueryRes",semanticQueryArray);
@@ -247,6 +255,86 @@ public class PhotoDaoImp implements PhotoDao {
         }
 
         return semanticQueryRes;
+    }
+
+    @Override
+    public JSONObject initGeoPicDesktop(PhotoInfo photoInfo, UserInfo userInfo) {
+        Connection connection = null;
+        JSONObject initGeoPicDesktopRes = new JSONObject();
+        JSONArray allphotoPathArray = new JSONArray();
+        try{
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            String initGeoPicDesktopSql = "select * from photos";
+            PreparedStatement preparedStatement = connection.prepareStatement(initGeoPicDesktopSql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            HashMap<String,String> getAllCities = new HashMap<>();
+            int photoCount = 0;
+            while (resultSet.next()){
+                String path = resultSet.getString("photopath");
+                String GPS = resultSet.getString("geo");
+                String formatted_address = resultSet.getString("formatted_address");
+                formatted_address = getCity(formatted_address);
+                if(!formatted_address.equals("")){
+                    getAllCities.put(formatted_address,formatted_address);
+                }
+                JSONObject jsonObject  = new JSONObject();
+                JSONArray jsonGPSArray = new JSONArray();
+                jsonGPSArray = getGPSArray(GPS);
+                jsonObject.put("GPS",jsonGPSArray);
+                jsonObject.put("photoPath",path);
+                allphotoPathArray.add(jsonObject);
+                photoCount++;
+            }
+
+            if(allphotoPathArray.size()>0){
+                initGeoPicDesktopRes.put("message","success");
+
+            }else {
+                initGeoPicDesktopRes.put("message","failure");
+            }
+
+            initGeoPicDesktopRes.put("photoCount",photoCount);
+            initGeoPicDesktopRes.put("placeCount",getAllCities.size());
+            initGeoPicDesktopRes.put("photoPath",allphotoPathArray);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return initGeoPicDesktopRes;
+    }
+
+
+    private JSONArray getGPSArray(String GPS){
+        JSONArray jsonGPSArray = new JSONArray();
+        double lon = 0.0f;
+        double lat = 0.0f;
+        if(!GPS.equals("")){
+            String temp[]= GPS.split("\\(")[1].split(" ");
+            lon = Double.parseDouble(temp[0]);
+            lat = Double.parseDouble(temp[1].split("\\)")[0]);
+        }
+        jsonGPSArray.add(lon);
+        jsonGPSArray.add(lat);
+        return jsonGPSArray;
+    }
+
+    private String getCity(String formatted_addresss){
+        String city = "";
+        if(formatted_addresss.indexOf("市")>-1){
+            city = formatted_addresss.split("市")[0]+"市";
+        }else if(formatted_addresss.indexOf("自治州")>-1){
+            city = formatted_addresss.split("自治州")[0]+"自治州";
+        }else {
+            for(String c:spectilCity){
+                if(formatted_addresss.indexOf(c)>-1){
+                    city =c;
+                    break;
+                }
+            }
+        }
+        return city;
+
     }
 
 }
