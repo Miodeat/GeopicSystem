@@ -33,13 +33,24 @@ public class UserDaoImp implements UserDao {
                 }
             }
 
-            String registerSql = "insert into users(username,password) values(?,?)";
+            String registerSql = "insert into users(username,password) values(?,?) returning user_id ";
             preparedStatement = connection.prepareStatement(registerSql);
             preparedStatement.setString(1,userInfo.getUsername());
             preparedStatement.setString(2,userInfo.getPassword());
-            int num = preparedStatement.executeUpdate();
-            if(num>0){
+
+            ResultSet resultSet1 = preparedStatement.executeQuery();
+            System.out.println(resultSet1.toString()+"resulsd");
+            int user_id = 0;
+
+            while(resultSet1.next()){
+              user_id = resultSet1.getInt(1);
+              System.out.println(user_id);
+              userInfo.setUserDBName("db"+user_id);
+            }
+            if(user_id!=0){
+                createUserDbAndTables(userInfo,connection);
                 registerResterRes.put("message","success");
+
             }else{
                 registerResterRes.put("message","failure");
             }
@@ -48,7 +59,6 @@ public class UserDaoImp implements UserDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return registerResterRes;
     }
 
@@ -65,7 +75,7 @@ public class UserDaoImp implements UserDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 int userDB = resultSet.getInt("userdb");
-                String userDbName = "DB"+userDB;
+                String userDbName = "db"+userDB;
                 loginRes.put("message","success");
                 loginRes.put("userDbName",userDbName);
                 UtilDao.closeConnection(connection);
@@ -77,5 +87,52 @@ public class UserDaoImp implements UserDao {
             e.printStackTrace();
         }
         return loginRes;
+    }
+
+    @Override
+    public boolean createUserDbAndTables(UserInfo userInfo,Connection connection) {
+        try {
+            if(connection.isClosed()){
+                connection = UtilDao.getConnection_SysOpDB();
+            }
+            String createDbSql = "CREATE DATABASE "+userInfo.getUserDBName();
+            PreparedStatement preparedStatement = connection.prepareStatement(createDbSql);
+            int createDbRes = preparedStatement.executeUpdate();
+            connection.close();
+
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            System.out.println(connection);
+            String createExtension = "create extension postgis";
+            preparedStatement = connection.prepareStatement(createExtension);
+            int creatEntension = preparedStatement.executeUpdate();
+
+            String createPotosSql ="create table photos(\n" +
+                    "\tphoto_id serial primary key,\n" +
+                    "\tformatted_address varchar,\n" +
+                    "\ttakentime timestamp DEFAULT '9999-01-01 00:00:00',\n" +
+                    "\tgeo Geometry(('POINT'),3857),\n" +
+                    "\tphotolabels text[],\n" +
+                    "\tphotopath varchar ,\n" +
+                    "\tpois text[],\n" +
+                    "\troads text[],\n" +
+                    "\tfacesid integer[],\n" +
+                    "\tsharedflag boolean DEFAULT false\n" +
+                    "\t);";
+            preparedStatement = connection.prepareStatement(createPotosSql);
+            boolean num = preparedStatement.execute();
+
+            String createFaceSql = "CREATE table face(\n" +
+                    "\tface_id serial primary key,\n" +
+                    "\tfacepath varchar ,\n" +
+                    "\tfacetoken varchar,\n" +
+                    "\tfacelabel varchar\n" +
+                    ");";
+            preparedStatement = connection.prepareStatement(createFaceSql);
+            int face = preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

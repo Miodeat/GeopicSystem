@@ -10,9 +10,7 @@ InitGeoPicDesktop = function (options) {
 
 InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
     let me = this;
-    let username = $(".username").val();
-    let us = $(".username").text();
-    console.log(username);
+
     let result = ["photoCount","placeCount","faceCount","photoPath","GPS"];
     $.ajax({
         url:"/SpatialDB-GeoPic-System/initGeoPicDesktopServlet",
