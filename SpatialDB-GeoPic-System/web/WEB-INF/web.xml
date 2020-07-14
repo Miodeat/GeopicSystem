@@ -3,4 +3,31 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <servlet>
+        <servlet-name>UserLoginServlet</servlet-name>
+        <servlet-class>servlets.UserLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserLoginServlet</servlet-name>
+        <url-pattern>/UserLoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserRegisterServlet</servlet-name>
+        <servlet-class>servlets.UserRegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserRegisterServlet</servlet-name>
+        <url-pattern>/UserRegisterServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>initGeoPicDesktopServlet</servlet-name>
+        <servlet-class>servlets.initGeoPicDesktopServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>initGeoPicDesktopServlet</servlet-name>
+        <url-pattern>/initGeoPicDesktopServlet</url-pattern>
+    </servlet-mapping>
 </web-app>
