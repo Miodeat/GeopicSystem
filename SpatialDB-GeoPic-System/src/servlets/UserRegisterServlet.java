@@ -29,6 +29,7 @@ public class UserRegisterServlet extends HttpServlet {
         userService = new UserService();
         JSONObject Res = new JSONObject();
         Res = userService.registerByUserNameAndPassword(userInfo);
+        out.write(Res.toString());
 
     }
 

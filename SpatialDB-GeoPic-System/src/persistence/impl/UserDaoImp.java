@@ -39,9 +39,9 @@ public class UserDaoImp implements UserDao {
             preparedStatement.setString(2,userInfo.getPassword());
             int num = preparedStatement.executeUpdate();
             if(num>0){
-                registerResterRes.put("message","success,注册成功");
+                registerResterRes.put("message","success");
             }else{
-                registerResterRes.put("message","注册失败");
+                registerResterRes.put("message","failure");
             }
             UtilDao.closeConnection(connection);
 
@@ -59,8 +59,8 @@ public class UserDaoImp implements UserDao {
         try{
             connection = UtilDao.getConnection_SysOpDB();
             String loginByUserNameAndPasswordSql ="select * from users " +
-                    "where username ="+userInfo.getUsername()+" and " +
-                    "password ="+userInfo.getPassword()+" limit 1";
+                    "where username ='"+userInfo.getUsername().trim()+"' and " +
+                    "password ='"+userInfo.getPassword().trim()+"' limit 1";
             PreparedStatement preparedStatement = connection.prepareStatement(loginByUserNameAndPasswordSql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){

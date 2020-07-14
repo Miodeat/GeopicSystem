@@ -26,9 +26,11 @@ public class UserLoginServlet extends HttpServlet {
         userInfo = new UserInfo();
         userInfo.setPassword(password);
         userInfo.setUsername(username);
+
         userService = new UserService();
         JSONObject Res = new JSONObject();
         Res = userService.loginByUserNameAndPassword(userInfo);
+
         out.write(Res.toString());
     }
 
