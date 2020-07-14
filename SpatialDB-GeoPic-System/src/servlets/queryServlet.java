@@ -80,13 +80,13 @@ public class queryServlet extends HttpServlet {
             String temp[] = photoLabel.split("/");
             for(int i = 0;i<temp.length;i++){
                if(i!=temp.length-1){
-                   photoLabels += temp[i]+",";
+                   photoLabels += "\""+temp[i]+"\",";
                }else{
-                   photoLabels+=temp[i];
+                   photoLabels+="\""+temp[i]+"\"";
                }
             }
         }else{
-            photoLabels=photoLabel;
+            photoLabels="\""+photoLabel+"\"";
         }
         return photoLabels;
     }

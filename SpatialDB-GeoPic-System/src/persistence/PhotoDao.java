@@ -23,6 +23,7 @@ public interface PhotoDao {
 
     public JSONObject getintegratedQueryPhotoPath(String starttime,String endTime,String address,String photolabel,String facelabel,String userDbname);
 
+    public JSONObject getPhotoDetailAccordingPhotoPath(String photoPath,UserInfo userInfo);
 
 
 }

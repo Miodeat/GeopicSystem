@@ -39,4 +39,13 @@
         <servlet-name>queryServlet</servlet-name>
         <url-pattern>/queryServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>getPhotoDetailServlet</servlet-name>
+        <servlet-class>servlets.getPhotoDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>getPhotoDetailServlet</servlet-name>
+        <url-pattern>/getPhotoDetailServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

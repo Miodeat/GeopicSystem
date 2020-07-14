@@ -9,6 +9,8 @@ import persistence.PhotoDao;
 import persistence.UtilDao;
 
 
+import javax.servlet.jsp.jstl.sql.Result;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -348,6 +350,45 @@ public class PhotoDaoImp implements PhotoDao {
         return integreatedQueryPhotoPathRes;
     }
 
+    @Override
+    public JSONObject getPhotoDetailAccordingPhotoPath(String photoPath,UserInfo userInfo) {
+        JSONObject getPotoDeatilRes = new JSONObject();
+        JSONArray getPotoDeatilResArray = new JSONArray();
+        Connection connection = null;
+        try{
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            String getPhotoDeatilSql = "select takentime,formatted_address,st_astext(geo),facesid,photolabels" +
+                    " from photos where photopath = '"+photoPath+"'";
+            PreparedStatement preparedStatement = connection.prepareStatement(getPhotoDeatilSql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                String formatted_address = resultSet.getString(1);
+                String takentime = resultSet.getTimestamp(2).toString();;
+                String GPS = resultSet.getString(3);
+                Array facesId = resultSet.getArray(4);
+                Array photoLabels = resultSet.getArray(5);
+                JSONArray AMapGPS = getGPSArray(GPS);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("formatted_address",formatted_address);
+                jsonObject.put("takentime",takentime);
+                jsonObject.put("AMapGPS",AMapGPS);
+                jsonObject.put("facesId",facesId);
+                jsonObject.put("photoLabels",photoLabels);
+                getPotoDeatilResArray.add(jsonObject);
+            }
+            if(getPotoDeatilResArray.size()>0){
+                getPotoDeatilRes.put("message","success");
+            }else{
+                getPotoDeatilRes.put("message","failure");
+            }
+            getPotoDeatilRes.put("photoDetail",getPotoDeatilResArray);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getPotoDeatilRes;
+    }
+
 
     private  String getIntegratedQuerySql(String starttime, String endTime,
                                           String address, String photolabel, String facesid){
@@ -469,58 +510,5 @@ public class PhotoDaoImp implements PhotoDao {
 
     }
 
-
-
-//    public ArrayList<String> getIntegratedQueryPhotoPath(PhotoInfo photoInfo, String startTime, String endTime, String geo, String address) {
-//        Connection conn = null;
-//        ArrayList<String >integratedQueryRes = new ArrayList<>();
-//        try{
-//            String getIntegratedQueryPhotoPathSql = "select photopath from photoinfo where ";
-//            ArrayList<String> timeQueryRes = getTimeQueryPhotoPath(startTime,endTime);
-//
-//            ArrayList<String > semanticQueryRes = getSemanticQueryPhotoPath(photoInfo);
-
-//            if(startTime!=""){
-//                integratedQueryRes = timeQueryRes;
-//                System.out.println("你在哪里1");
-//                if(geo!=""){
-//                    System.out.println("你在哪里2");
-//                    ArrayList<String > placeQueryRes = getPlaceQueryPhotoPath(geo,address);
-//                    integratedQueryRes = getSames(integratedQueryRes,placeQueryRes);
-//                    if(photoInfo.getPhotoLabels()!=null||photoInfo.getFacesId()!=null){
-//                        System.out.println("你在哪里3");
-//                        integratedQueryRes = getSames(integratedQueryRes,semanticQueryRes);
-//                    }
-//                }else{
-//                    System.out.println("你在哪里4");
-//                    if(photoInfo.getPhotoLabels()!=null||photoInfo.getFacesId()!=null){
-//                        System.out.println("你在哪里5");
-//                        System.out.println(integratedQueryRes);
-//                        System.out.println(semanticQueryRes);
-//                        integratedQueryRes = getSames(integratedQueryRes,semanticQueryRes);
-//                    }
-//                }
-//            }else{
-//                if(geo!=""){
-//                    System.out.println("你在哪里6");
-//                    ArrayList<String > placeQueryRes = getPlaceQueryPhotoPath(geo,address);
-//                    integratedQueryRes = placeQueryRes;
-//                    if(photoInfo.getPhotoLabels()!=null||photoInfo.getFacesId()!=null){
-//                        integratedQueryRes = getSames(integratedQueryRes,semanticQueryRes);
-//                    }
-//                }else{
-//                    System.out.println("你在哪里7");
-//                    if(photoInfo.getPhotoLabels()!=null||photoInfo.getFacesId()!=null){
-//                        integratedQueryRes = semanticQueryRes;
-//                    }
-//                }
-//
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return integratedQueryRes;
-//    }
 
 }

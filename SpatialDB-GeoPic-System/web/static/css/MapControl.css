@@ -1,0 +1,16 @@
+.cluster-icon {
+    width: 25px;
+    height: 12px;
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.cluster-left-img {
+    margin: 1px 1px 1px 2px;
+}
+
+.cluster-right-img {
+    margin: 1px 2px 1px 1px;
+}
