@@ -26,25 +26,33 @@ MapControl.prototype.addQueryResult = function(startTime, endTime,
                                                loc, photoLabels,
                                                faces, userDbName){
     let me = this;
-    let query_params = {
+    let queryParams = {
         startTime: startTime,
         endTime: endTime,
         queryPlace: loc,
         queryPhotoLabel: photoLabels,
         queryFaceLabel: faces
     };
-    let result_type = ["photoPath", "AMapGPS"];
+    let returnType = ["photoPath", "AMapGPS"];
 
-    let photos = Query(query_params, result_type, userDbName);
-
-    me._loadMarkers(photos);
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/SpatialDB_GeoPic_System/queryServlet",
+        data: {
+            data: queryParams,
+            result: returnType,
+            username: userDbName
+        },
+        success: function (photos) {
+            me._loadMarkers(photos);
+        }
+    });
 };
 
 MapControl.prototype._loadMarkerCluster = function (photos) {
     let me = this;
 
     let markers = me._constructMarkerArray(photos);
-    let count = markers.length;
     me.markerCluster = new AMap.MarkerClusterer(me.map, markers, {
         zoomOnClick: false,
         renderClusterMarker: function (context) {
