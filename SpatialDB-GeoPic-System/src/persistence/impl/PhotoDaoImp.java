@@ -2,6 +2,7 @@ package persistence.impl;
 
 import domain.PhotoInfo;
 import domain.UserInfo;
+import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import persistence.PhotoDao;
@@ -83,11 +84,11 @@ public class PhotoDaoImp implements PhotoDao {
      *  {
      *      "timeQueryRes":[
      *      {
-     *          "GPS":"POINT(112.3,28.6)"
+     *          "AMapGPS":"POINT(112.3,28.6)"
      *          "photoPath":"photoDataSet\photos1\1.jpg
      *      },
      *      {
-     *          "GPS":"POINT(112.3,28.6)"
+     *          "AMapGPS":"POINT(112.3,28.6)"
      *          "photoPath":"photoDataSet\photos1\1.jpg
      *      }
      *      ]
@@ -109,7 +110,7 @@ public class PhotoDaoImp implements PhotoDao {
                 JSONObject jsonObject = new JSONObject();
                 String path = resultSet.getString(1);
                 String geo = resultSet.getString(2);
-                jsonObject.put("GPS",geo);
+                jsonObject.put("AMapGPS",geo);
                 jsonObject.put("photoPath",path);
                 timeQueryResArray.add(jsonObject);
             }
@@ -135,11 +136,11 @@ public class PhotoDaoImp implements PhotoDao {
      *        {
      *            "placeQueryRes":[
      *            {
-     *                "GPS":[112.3,44.2]
+     *                "AMapGPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            },
      *            {
-     *                "GPS":[112.3,44.2]
+     *                "AMapGPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            }
      *            ]
@@ -164,7 +165,7 @@ public class PhotoDaoImp implements PhotoDao {
                 JSONObject jsonObject = new JSONObject();
                 String geo = resultSet.getString(1);
                 String path = resultSet.getString(2);
-                jsonObject.put("GPS",geo);
+                jsonObject.put("AMapGPS",geo);
                 jsonObject.put("photoPath",path);
                 placeQueryResArray.add(jsonObject);
             }
@@ -195,11 +196,11 @@ public class PhotoDaoImp implements PhotoDao {
      *        {
      *            "data":[
      *            {
-     *                "GPS":[112.3,44.2]
+     *                "AMapGPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            },
      *            {
-     *                "GPS":[112.3,44.2]
+     *                "AMapGPS":[112.3,44.2]
      *                "photoPath":"photoDataSet\photos1\1.jpg
      *            }
      *            ]
@@ -239,7 +240,7 @@ public class PhotoDaoImp implements PhotoDao {
                 JSONObject jsonObject = new JSONObject();
                 String geo = resultSet.getString(1);
                 String path = resultSet.getString(2);
-                jsonObject.put("GPS",geo);
+                jsonObject.put("AMapGPS",geo);
                 jsonObject.put("photoPath",path);
                 semanticQueryArray.add(jsonObject);
             }
@@ -281,7 +282,7 @@ public class PhotoDaoImp implements PhotoDao {
                 JSONObject jsonObject  = new JSONObject();
                 JSONArray jsonGPSArray = new JSONArray();
                 jsonGPSArray = getGPSArray(GPS);
-                jsonObject.put("GPS",jsonGPSArray);
+                jsonObject.put("AMapGPS",jsonGPSArray);
                 jsonObject.put("photoPath",path);
                 allphotoPathArray.add(jsonObject);
                 photoCount++;
@@ -296,7 +297,7 @@ public class PhotoDaoImp implements PhotoDao {
 
             initGeoPicDesktopRes.put("photoCount",photoCount);
             initGeoPicDesktopRes.put("placeCount",getAllCities.size());
-            initGeoPicDesktopRes.put("photoPath",allphotoPathArray);
+            initGeoPicDesktopRes.put("photoPathAndGPS",allphotoPathArray);
             System.out.println(initGeoPicDesktopRes.toString());
 
         } catch (Exception e) {
@@ -306,7 +307,135 @@ public class PhotoDaoImp implements PhotoDao {
         return initGeoPicDesktopRes;
     }
 
+    @Override
+    public JSONObject getintegratedQueryPhotoPath(String starttime, String endTime,
+                                                  String address, String photolabel, String facelabel,String userDbname) {
+        JSONObject integreatedQueryPhotoPathRes = new JSONObject();
+        JSONArray integreatedQueryArray = new JSONArray();
+        Connection connection = null;
+        try {
+            connection = UtilDao.getConnection_UserDB(userDbname);
+            String integratedQuerySql = "select photopath,st_astext(geo) from photos ";
+            String sqlTemp = getIntegratedQuerySql(starttime,endTime,address,photolabel,facelabel);
+            if(!sqlTemp.equals("")){
+                integratedQuerySql += " where "+sqlTemp;
+                System.out.println(integratedQuerySql);
+            }
 
+            PreparedStatement preparedStatement = connection.prepareStatement(integratedQuerySql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String path = resultSet.getString(1);
+                String AMapGPS = resultSet.getString(2);
+                JSONArray jsonGPSArray = new JSONArray();
+                jsonGPSArray = getGPSArray(AMapGPS);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("AMapGPS",jsonGPSArray);
+                jsonObject.put("photoPath",path);
+                integreatedQueryArray.add(jsonObject);
+            }
+            if(integreatedQueryArray.size()>0){
+                integreatedQueryPhotoPathRes.put("message","success");
+            }else{
+                integreatedQueryPhotoPathRes.put("message","failure");
+            }
+            integreatedQueryPhotoPathRes.put("photoPathAndGPS",integreatedQueryArray);
+            System.out.println(integreatedQueryPhotoPathRes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return integreatedQueryPhotoPathRes;
+    }
+
+
+    private  String getIntegratedQuerySql(String starttime, String endTime,
+                                          String address, String photolabel, String facesid){
+        String integratedQuerySql = "";
+
+        String photolabels = photolabel;
+        if((!starttime.equals(""))&&(!endTime.equals(""))){
+            if(!address.equals("")){
+                if(!photolabel.equals("")){
+                    if(!facesid.equals("")){
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text like '%"+address+"%') " +
+                                " and (photolabels @>'{"+photolabels+"}') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else {
+
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text  like '%"+address+"%') " +
+                                " and (photolabels @>'{"+photolabels+"}') ";
+                    }
+                }else{
+                    if(!facesid.equals("")){
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text  like '%"+address+"%') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else{
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text  like '%"+address+"%') ";
+                    }
+
+                }
+            }else {
+                if(!photolabel.equals("")){
+                    if(!facesid.equals("")){
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (photolabels @>'{"+photolabels+"}') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else{
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (photolabels @>'{"+photolabels+"}') ";
+                    }
+                }else{
+                    if(!facesid.equals("")){
+                        integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else{
+
+                    }
+                    integratedQuerySql = " (takentime between '"+starttime+"' and '"+endTime+"') ";
+                }
+            }
+        }else{
+            if(!address.equals("")){
+                if(!photolabel.equals("")){
+                    if(!facesid.equals("")){
+                        integratedQuerySql = " (formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text like '%"+address+"%') " +
+                                " and (photolabels @>'{"+photolabels+"}') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else{
+                        integratedQuerySql = "(formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text  like '%"+address+"%') " +
+                                " and (photolabels @>'{"+photolabels+"}') ";
+                    }
+                }else{
+                    if(!facesid.equals("")){
+                        integratedQuerySql = "(formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text  like '%"+address+"%') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else{
+                        integratedQuerySql = "(formatted_address like '%"+address+"%' or pois::text like '%"+address+"%' or roads::text  like '%"+address+"%') ";
+                    }
+                }
+            }else {
+                if(!photolabel.equals("")){
+                    if(!facesid.equals("")){
+                        integratedQuerySql = "(photolabels @>'{"+photolabels+"}') " +
+                                " and (facesid @>'{"+facesid+"}')";
+                    }else{
+                        integratedQuerySql = "(photolabels @>'{"+photolabels+"}') ";
+                    }
+                }else{
+                    if(!facesid.equals("")){
+                        integratedQuerySql = "(facesid @>'{"+facesid+"}')";
+                    }
+                }
+            }
+
+        }
+        return integratedQuerySql;
+    }
     private JSONArray getGPSArray(String GPS){
         JSONArray jsonGPSArray = new JSONArray();
         double lon = 0.0f;
@@ -339,6 +468,7 @@ public class PhotoDaoImp implements PhotoDao {
         return city;
 
     }
+
 
 
 //    public ArrayList<String> getIntegratedQueryPhotoPath(PhotoInfo photoInfo, String startTime, String endTime, String geo, String address) {

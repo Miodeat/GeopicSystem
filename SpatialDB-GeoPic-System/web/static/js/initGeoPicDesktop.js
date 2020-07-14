@@ -5,22 +5,19 @@
  */
 InitGeoPicDesktop = function (options) {
     let me = this;
+    me.userDbname = options;
+    console.log(window.location.href)
+    console.log(me.userDbname+"你还幼稚吗")
     me.getUserPhotosInfo();
     me.mapControl = new MapControl({
         div: "map"
     });
+
 };
 
 InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
     let me = this;
-<<<<<<< HEAD
 
-=======
-    let username = $(".username").val();
-    me.username = username;
-    let us = $(".username").text();
-    console.log(username);
->>>>>>> ba2eb02bc4ea49bdb897e1c7bfc07fa7eec6a6d4
     let result = ["photoCount","placeCount","faceCount","photoPath","GPS"];
     $.ajax({
         url:"/SpatialDB-GeoPic-System/initGeoPicDesktopServlet",
@@ -28,7 +25,7 @@ InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
         data:{
             "data":"",
             "result":result.toString(),
-            "username":"db1"
+            "userDbname":me.userDbname
         },
         success:function (res) {
             let json = typeof res=='string'?JSON.parse(res):res;
@@ -58,4 +55,5 @@ InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCoun
     $(".placeCount").text(placeCount)
     me.mapControl.initAsPreview(photoPath)
 };
+
 
