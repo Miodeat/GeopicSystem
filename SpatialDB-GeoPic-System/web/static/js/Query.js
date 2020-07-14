@@ -4,7 +4,7 @@
 //                      json Object, 形如:
 //                      {
 //                          photoLabels: "学校",
-//                          faceLabel: "彭举|李伟霞"
+//                          faceLabel: "彭举/李伟霞"
 //                      }
 // @param return_type: 查询应当返回的信息
 //                     json array, 形如:
