@@ -74,6 +74,7 @@ RegisterAnfLogin.prototype.loginCheck = function () {
         success: function (res) {
             let json =  typeof res =='string'?JSON.parse(res):res;
             let result = json.message;
+          
             if (result=="success"){
                 var userDbname = json.userDbName;
                 window.location.href="../html/index.html?userDbName="+userDbname;

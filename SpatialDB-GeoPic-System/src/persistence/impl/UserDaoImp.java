@@ -79,6 +79,7 @@ public class UserDaoImp implements UserDao {
                 loginRes.put("message","success");
                 loginRes.put("userDbName",userDbName);
                 UtilDao.closeConnection(connection);
+                System.out.println(loginRes);
                 return loginRes;
             }
             loginRes.put("message","failure");

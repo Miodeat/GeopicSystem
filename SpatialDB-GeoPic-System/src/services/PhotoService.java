@@ -18,4 +18,9 @@ public class PhotoService{
         photoDao = new PhotoDaoImp();
         return photoDao.getintegratedQueryPhotoPath(starttime,endTime,address,photolabel,facelabel,userDbname);
     }
+
+    public JSONObject getPhotoDetailAccordingPhotoPath(String photoPath,UserInfo userInfo){
+        photoDao = new PhotoDaoImp();
+        return  photoDao.getPhotoDetailAccordingPhotoPath(photoPath,userInfo);
+    }
 }
