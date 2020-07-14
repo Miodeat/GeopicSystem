@@ -23,6 +23,7 @@
   <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="../js/initGeoPicDesktop.js"></script>
   <script src="../js/MapControl.js"></script>
+  <script src="../js/Upload.js"></script>
 </head>
 
 <script>
@@ -155,7 +156,7 @@
         </div>
 
         <!--@TODO:上传照片-->
-        <footer class="twt-footer" > <a href="#"><i class="fa fa-camera"  data-toggle="modal" data-target="#smallFacemodal"></i></a>&nbsp;上传照片
+        <footer class="twt-footer" ><input type="file" id="input_upload_driver" onchange="photoWall.uploadPhotos()" ></input></footer>
       </section>
     </div>
     <div class="col-lg-4 col-xl-2">
