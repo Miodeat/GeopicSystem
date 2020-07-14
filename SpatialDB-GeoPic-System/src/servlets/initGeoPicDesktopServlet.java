@@ -26,6 +26,7 @@ public class initGeoPicDesktopServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
+        String result = request.getParameter("result");
         userInfo = new UserInfo();
         userInfo.setUserDBName("db1");
         photoInfo = new PhotoInfo();
@@ -41,5 +42,6 @@ public class initGeoPicDesktopServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request,response);
+
     }
 }

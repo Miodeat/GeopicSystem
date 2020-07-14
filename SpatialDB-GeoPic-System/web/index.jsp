@@ -33,6 +33,7 @@
       //   });
       // })
       var register = new RegisterAnfLogin();
+
     </script>
   </head>
   <body class="bg-dark">

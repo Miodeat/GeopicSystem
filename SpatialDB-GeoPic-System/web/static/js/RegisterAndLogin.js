@@ -10,10 +10,10 @@ RegisterAnfLogin = function (options) {
  * 注册
  */
 RegisterAnfLogin.prototype.register = function () {
-    var me = this;
-    var username = $(".usernameInput").val();
-    var password = $(".passwordInput").val();
-    var passwordSure = $(".passwordInputSure").val();
+    let me = this;
+    let username = $(".usernameInput").val();
+    let password = $(".passwordInput").val();
+    let passwordSure = $(".passwordInputSure").val();
     console.log(username);
     console.log(password);
     me.submitRegisterDataToLoginServlet(username,password);
@@ -57,10 +57,10 @@ RegisterAnfLogin.prototype.loginDirect = function () {
  * 登录时用户账号密码检测
  */
 RegisterAnfLogin.prototype.loginCheck = function () {
-    var me = this;
+    let me = this;
     console.log("hello")
-    var username = $(".username").val();
-    var password = $(".password").val();
+    let username = $(".username").val();
+    let password = $(".password").val();
     console.log(username);
     console.log(password);
     $.ajax({
@@ -72,10 +72,11 @@ RegisterAnfLogin.prototype.loginCheck = function () {
             "password": password
         },
         success: function (res) {
-            var json =  typeof res =='string'?JSON.parse(res):res;
-            var result = json.message;
+            let json =  typeof res =='string'?JSON.parse(res):res;
+            let result = json.message;
             if (result=="success"){
                 window.location.href="../html/index.html"
+                let initGeoPicDesktop = new InitGeoPicDesktop();
             }else {
                 alert("用户名或者密码不正确")
             }
