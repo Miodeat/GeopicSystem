@@ -76,8 +76,8 @@ RegisterAnfLogin.prototype.loginCheck = function () {
             let result = json.message;
             if (result=="success"){
                 var userDbname = result.userDbName;
-                window.location.href="../html/index.html"
-                let initGeoPicDesktop = new InitGeoPicDesktop(userDbname);
+                window.location.href="../html/index.html?userDbname ="+userDbname;
+                let initGeoPicDesktop = new InitGeoPicDesktop();
             }else {
                 alert("用户名或者密码不正确")
             }
