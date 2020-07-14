@@ -5,20 +5,20 @@
 ajax中参数data中有三类json数据
 分别是：1. "data":前端传递给后台的数据,包括各种数据、以及查询条件等
 	   2. "result":后台传递给前端的结果的key的说明,前端需要哪些返回结果,在result这个数组中说明
-	   3. "username":前端传给后台用户的username
+	   3. "userDbname":前端传给后台用户的数据库名称
 
 下面对于键值对中的命名做统一规范（不全的大家后面可以自行添加，但同时也要在这个文件中说明）
 data：{
 	"data":{[]},
 	"result":[],
-	"username":username
+	"userDbname":userDbname
 }
 
 1. 对于"data"中的key: 
 	- "photoData":上传照片的base64编码数据
 	- "photoPath"：上传照片的路径
 	- "photoName"：上传照片的文件名
-	- "GPS"：照片的地理位置
+	- "AMapGPS"：照片的地理位置
 	- "formatted_address":照片的格式化地址
 	- "poi":照片周边的pois
 	- "road"：照片周边的roads
@@ -36,13 +36,14 @@ data：{
 	- "queryFaceLabel":查询的人脸标签,
 	- "username":注册、登录时的用户名
 	- "password":注册、登录时的用户账号密码
+	- "userDbname":传给后台的该用户的数据库名称
 
 2. 对于"result"中的key:
 	- "message":查询或登录或注册消息提醒,两个值，"success"、"failure"
-	- "photoPath":查询的照片路径
+	- "photoPathAndGPS":查询的照片路径和经纬度
 	- "facePath":查询的人脸路径
 	- "formatted_address":结构化地址
-	- "GPS":照片的坐标
+	- "AMapGPS":照片的坐标
 	- "poi":照片周边的pois
 	- "road"：照片周边的roads
 	- "uploadResFlag":上传照片结果，true or false
@@ -52,6 +53,7 @@ data：{
 	- "faceCount":初始化界面所有人脸的数量
 	- "photoCount":初始化界面所有照片的数量
 	- "placeCount":初始化界面所去过地区的数量，以市级为统计单位
+	- "userDbname"
 
 
 3. 对于username:登录时获取的用户名字，用来后台查询对应数据库的

@@ -5,22 +5,18 @@
  */
 InitGeoPicDesktop = function (options) {
     let me = this;
+    me.userDbname = options;
+    console.log(me.userDbname+"你还幼稚吗");
     me.getUserPhotosInfo();
     me.mapControl = new MapControl({
         div: "map"
     });
+
 };
 
 InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
     let me = this;
-<<<<<<< HEAD
 
-=======
-    let username = $(".username").val();
-    me.username = username;
-    let us = $(".username").text();
-    console.log(username);
->>>>>>> ba2eb02bc4ea49bdb897e1c7bfc07fa7eec6a6d4
     let result = ["photoCount","placeCount","faceCount","photoPath","GPS"];
     $.ajax({
         url:"/SpatialDB-GeoPic-System/initGeoPicDesktopServlet",
@@ -28,7 +24,7 @@ InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
         data:{
             "data":"",
             "result":result.toString(),
-            "username":"db1"
+            "userDbname":me.userDbname
         },
         success:function (res) {
             let json = typeof res=='string'?JSON.parse(res):res;
@@ -38,8 +34,8 @@ InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
                 let placeCount = json.placeCount;
 
                 //存储了所有的照片的GPS和Path,是个数组，每个数组是jsonObject[{"GPS":[112.3,32.1],"photoPath":"xx"},{}
-                let photoPath = json.photoPath;
-                me.setInitGeoPicDesktop(photoCount,faceCount,placeCount,photoPath);
+                let photoPathAndGPS = json.photoPathAndGPS;
+                me.setInitGeoPicDesktop(photoCount,faceCount,placeCount,photoPathAndGPS);
 
             }else{
                 console.log(json.message)
@@ -51,11 +47,13 @@ InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
     });
 };
 
-InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCount,placeCount,photoPath) {
+InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCount,
+                                                             placeCount,photoPathAndGPS) {
     let me = this;
     $(".photoCount").text(photoCount);
     $(".faceCount").text(faceCount);
-    $(".placeCount").text(placeCount)
-    me.mapControl.initAsPreview(photoPath)
+    $(".placeCount").text(placeCount);
+    me.mapControl.initAsPreview(photoPathAndGPS);
 };
+
 

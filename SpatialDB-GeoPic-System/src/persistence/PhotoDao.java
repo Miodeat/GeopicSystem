@@ -21,6 +21,9 @@ public interface PhotoDao {
 
     public JSONObject initGeoPicDesktop(PhotoInfo photoInfo,UserInfo userInfo);
 
+    public JSONObject getintegratedQueryPhotoPath(String starttime,String endTime,String address,String photolabel,String facelabel,String userDbname);
+
+    public JSONObject getPhotoDetailAccordingPhotoPath(String photoPath,UserInfo userInfo);
 
 
 }
