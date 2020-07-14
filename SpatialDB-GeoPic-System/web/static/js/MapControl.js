@@ -24,7 +24,7 @@ MapControl.prototype.initAsPreview = function (photos) {
 
 MapControl.prototype.addQueryResult = function(start_time, end_time,
                                                loc, photo_labels,
-                                               faces, user_name){
+                                               faces, user_dbname){
     let me = this;
     let query_params = {
         startTime: start_time,
@@ -35,7 +35,7 @@ MapControl.prototype.addQueryResult = function(start_time, end_time,
     };
     let result_type = ["photoPath", "AMapGPS"];
 
-    let photos = Query(query_params, result_type, user_name);
+    let photos = Query(query_params, result_type, user_dbname);
 
     me._loadMarkers(photos);
 };

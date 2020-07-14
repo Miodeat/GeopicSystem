@@ -9,7 +9,7 @@
 // @param return_type: 查询应当返回的信息
 //                     json array, 形如:
 //                     ["photoPath", "AMapGPS"]
-// @param user_name: 当前用户的唯一识别符
+// @param user_dbname: 当前用户的数据库名
 // @return json列表, 包含多个json Object
 //         形如:
 //         [
@@ -18,7 +18,7 @@
 //                  AMapGPS: [23.4, 116.3]
 //              }
 //         ]
-function Query(query_params, return_type, user_name) {
+function Query(query_params, return_type, user_dbname) {
     let result = [];
     $.ajax({
         type: "POST",
@@ -26,7 +26,7 @@ function Query(query_params, return_type, user_name) {
         data: {
             data: query_params,
             result: return_type,
-            username: user_name
+            username: user_dbname
         },
         success: function (res) {
             result = res;
