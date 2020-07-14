@@ -17,7 +17,9 @@
 <link rel="stylesheet" href="../vendors/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="../vendors/themify-icons/css/themify-icons.css">
 <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8"></script>
+  <script type="text/javascript"
+          src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8&plugin=AMap.MarkerClusterer"></script>
+
   <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
   <script src="../js/Query.js"></script>
   <script type="text/javascript" src="../js/initGeoPicDesktop.js"></script>
@@ -25,8 +27,21 @@
 </head>
 
 <script>
+  function getParam(paramID){
+    let urlAndParams = window.location.href.split("?");
+    let params = urlAndParams[urlAndParams.length - 1];
+    let paramList = params.split("&");
+    for (let i = 0, len = paramList.length; i < len; i++){
+      let param = paramList[i];
+      if(param.search(paramID) != -1){
+        let arr = param.split("=");
+        return arr[arr.length - 1];
+      }
+    }
+  }
   $(document).ready(function () {
-    var initGeoPicDesktopServlet = new InitGeoPicDesktop();
+    let dbName = getParam("userDbName");
+    var initGeoPicDesktopServlet = new InitGeoPicDesktop(dbName);
   });
 </script>
 
