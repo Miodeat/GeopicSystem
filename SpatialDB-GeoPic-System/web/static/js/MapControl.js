@@ -22,20 +22,20 @@ MapControl.prototype.initAsPreview = function (photos) {
     me._loadMarkerCluster(photos);
 };
 
-MapControl.prototype.addQueryResult = function(start_time, end_time,
-                                               loc, photo_labels,
-                                               faces, user_dbname){
+MapControl.prototype.addQueryResult = function(startTime, endTime,
+                                               loc, photoLabels,
+                                               faces, userDbName){
     let me = this;
     let query_params = {
-        startTime: start_time,
-        endTime: end_time,
+        startTime: startTime,
+        endTime: endTime,
         queryPlace: loc,
-        queryPhotoLabel: photo_labels,
+        queryPhotoLabel: photoLabels,
         queryFaceLabel: faces
     };
     let result_type = ["photoPath", "AMapGPS"];
 
-    let photos = Query(query_params, result_type, user_dbname);
+    let photos = Query(query_params, result_type, userDbName);
 
     me._loadMarkers(photos);
 };
@@ -44,33 +44,65 @@ MapControl.prototype._loadMarkerCluster = function (photos) {
     let me = this;
 
     let markers = me._constructMarkerArray(photos);
-
+    let count = markers.length;
     me.markerCluster = new AMap.MarkerClusterer(me.map, markers, {
         zoomOnClick: false,
         renderClusterMarker: function (context) {
-            me._clusterRenderer(context)
+            me._clusterRenderer(context);
         }
     })
 };
 
 MapControl.prototype._clusterRenderer = function (context) {
-    let div = $("<div>").addClass("cluster-icon");
-    let img1 = context.markers[0].getIcon();
-    let img2 = context.markers[1].getIcon();
-    $("<img>").appendTo(div).attr({
-        src: img1,
-        width: "10px",
-        height: "10px",
-    }).addClass("cluster-left-img");
-    $("<img>").appendTo(div).attr({
-        src: img2,
-        width: "10px",
-        height: "10px",
-    }).addClass("cluster-right-img");
+    let container = document.createElement("div");
+    container.style.width = "34px";
+
+    let label = document.createElement("div");
+    label.style.width = "20px";
+    label.style.height = "20px";
+    label.style.borderRadius = "10px";
+    label.style.backgroundColor = "rgb(200, 0, 0)";
+    label.style.position = "absolute";
+    label.style.top = "-9px";
+    label.style.left = "23px";
+    label.style.textAlign = "center";
+    label.style.fontSize = "0.7em";
+    label.style.fontFamily = '"Times New Roman", Times, serif';
+    label.style.fontWeight = "900";
+    label.style.color = "white";
+
+    if(context.count > 99){
+        label.innerHTML = "99+";
+    }
+    else{
+        label.innerHTML = context.count;
+    }
+    let imgDiv = document.createElement("div");
+    imgDiv.style.width = "34px";
+    imgDiv.style.border = "2px solid black";
+    imgDiv.style.borderRadius = "3px";
+    imgDiv.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+
+    let img1 = document.createElement("img");
+    img1.setAttribute("src", context.markers[0].getIcon());
+    img1.setAttribute("width", "30");
+    img1.style.margin = "1px 0 1px 0";
+    img1.style.float = "left";
+
+    let img2 = document.createElement("img");
+    img2.setAttribute("src", context.markers[1].getIcon());
+    img2.setAttribute("width", "30");
+    img2.style.margin = "1px 0 1px 0";
+    img1.style.float = "left";
+
+    imgDiv.appendChild(img1);
+    imgDiv.appendChild(img2);
+    container.appendChild(label);
+    container.appendChild(imgDiv);
 
     context.marker.setAnchor("bottom-center");
     context.marker.setOffset(new AMap.Pixel(0,0));
-    context.marker.setContent(div);
+    context.marker.setContent(container);
 };
 
 MapControl.prototype._loadMarkers = function (photos) {
@@ -85,12 +117,14 @@ MapControl.prototype._constructMarkerArray = function (photos) {
     let markers = [];
     for(let i = 0, len = photos.length; i < len; i++){
         let photo = photos[i];
-        let lngLat = new AMap.LngLat(photo.AMapGPS[1], photo.AMapGPS[0]);
+        let lngLat = new AMap.LngLat(photo.AMapGPS[0], photo.AMapGPS[1]);
+        let content = '<img src=\"../../../img/' + photo.photoPath + '\" width="30px"></img>';
         let marker = new AMap.Marker({
             position: lngLat,
             anchor: "bottom-center",
             offset: new AMap.Pixel(0,0),
-            icon: "../../" + photo.photoPath
+            icon: "../../../img/" + photo.photoPath,
+            content: content
         });
         markers.push(marker);
     }

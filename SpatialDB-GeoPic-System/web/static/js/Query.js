@@ -18,15 +18,15 @@
 //                  AMapGPS: [23.4, 116.3]
 //              }
 //         ]
-function Query(query_params, return_type, user_dbname) {
+function Query(queryParams, returnType, userDbName) {
     let result = [];
     $.ajax({
         type: "POST",
         url: "http://localhost:8080/SpatialDB_GeoPic_System/queryServlet",
         data: {
-            data: query_params,
-            result: return_type,
-            username: user_dbname
+            data: queryParams,
+            result: returnType,
+            username: userDbName
         },
         success: function (res) {
             result = res;

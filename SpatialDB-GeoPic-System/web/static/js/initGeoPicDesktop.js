@@ -6,8 +6,7 @@
 InitGeoPicDesktop = function (options) {
     let me = this;
     me.userDbname = options;
-    console.log(window.location.href)
-    console.log(me.userDbname+"你还幼稚吗")
+    console.log(me.userDbname+"你还幼稚吗");
     me.getUserPhotosInfo();
     me.mapControl = new MapControl({
         div: "map"
@@ -35,8 +34,8 @@ InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
                 let placeCount = json.placeCount;
 
                 //存储了所有的照片的GPS和Path,是个数组，每个数组是jsonObject[{"GPS":[112.3,32.1],"photoPath":"xx"},{}
-                let photoPath = json.photoPath;
-                me.setInitGeoPicDesktop(photoCount,faceCount,placeCount,photoPath);
+                let photoPathAndGPS = json.photoPathAndGPS;
+                me.setInitGeoPicDesktop(photoCount,faceCount,placeCount,photoPathAndGPS);
 
             }else{
                 console.log(json.message)
@@ -48,12 +47,13 @@ InitGeoPicDesktop.prototype.getUserPhotosInfo = function () {
     });
 };
 
-InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCount,placeCount,photoPath) {
+InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCount,
+                                                             placeCount,photoPathAndGPS) {
     let me = this;
     $(".photoCount").text(photoCount);
     $(".faceCount").text(faceCount);
-    $(".placeCount").text(placeCount)
-    me.mapControl.initAsPreview(photoPath)
+    $(".placeCount").text(placeCount);
+    me.mapControl.initAsPreview(photoPathAndGPS);
 };
 
 
