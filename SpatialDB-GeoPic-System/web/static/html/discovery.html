@@ -24,6 +24,7 @@
           src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8"></script>
   <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
   <script src="../js/MapControl.js"></script>
+  <script src="../js/DiscoveryControl.js"></script>
   <script>
     let dbName = getParam("userDbName");
 
@@ -49,12 +50,13 @@
     }
 
     $(document).ready(function () {
-      let mapControl = new MapControl({
+      let control = new DiscoveryControl({
         div: "map"
       });
-      mapControl.initAsDiscovery();
+
     });
   </script>
+
 </head>
 
 <body>
