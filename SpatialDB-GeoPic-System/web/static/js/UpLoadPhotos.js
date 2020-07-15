@@ -38,12 +38,12 @@ UpLoadPhotos.prototype.passPhotoData = function () {
         r.readAsDataURL(file);
         r.onloadend= function (ev){
            let photoData = this.result;
-           var fileNameAndUserDb = file.name+","+"db1"
+           var fileNameAndUserDb = file.name;
            let photoDataAndFileName = photoData.replace("data:image/jpeg;base64",fileNameAndUserDb);
             photoDataAndFileName = photoDataAndFileName.replace("data:image/png;base64",fileNameAndUserDb);
             photoDataAndFileName = photoDataAndFileName.replace("data:image/gif;base64",fileNameAndUserDb);
             photoDataAndFileName = photoDataAndFileName.replace("data:image/bmp;base64",fileNameAndUserDb);
-            console.log(photoDataAndFileName);
+            // console.log(photoDataAndFileName);
             $.ajax({
                 url:"/SpatialDB-GeoPic-System/GetPhotoDataServlet",
                 type:"POST",
@@ -61,7 +61,6 @@ UpLoadPhotos.prototype.passPhotoData = function () {
                         me.isExist = true;
                     }else{
                         console.log(json.message);
-
                     }
                 },
                 error:function (err) {
@@ -108,54 +107,92 @@ UpLoadPhotos.prototype.getExifData = function (file) {
                         key:"8b6b3261c4d70b409feaa273ada901f2",
                         location:location,
                         extensions:'all',
+                        batch:true,
                     },
                     async:true,
                     success:function (res) {
                         let json = typeof res  =='string'?JSON.parse(res):res;
-                        let poisName = [];
-                        let roadName = [];
-                        if(typeof json.regeocode !="undefined"){
-                            if (json.regeocode.length>0){
-                                pois = json.regeocode.pois;
-                                roads = json.regeocode.roads;
-                                formatted_address = json.regeocode.formatted_address;
+                        // console.log(json)
+                        me.poisName = [];
+                        me.roadName = [];
+                        console.log(typeof json.regeocodes,json.regeocodes)
+                        if(typeof json.regeocodes !="undefined"){
+                            if (json.regeocodes.length>0){
+                                pois = json.regeocodes[0].pois;
+                                roads = json.regeocodes[0].roads;
+                                formatted_address = json.regeocodes[0].formatted_address;
 
                                 if(pois.length>0){
                                     for(let j = 0;j<pois.length;j++){
-                                        poisName[j] = pois[j].name;
+                                        me.poisName[j] = pois[j].name;
                                     }
                                 }
                                 if(roads.length>0){
                                     for(let k = 0;k<roads.length;k++){
-                                        roadName[k] = roads[k].name;
+                                        me.roadName[k] = roads[k].name;
                                     }
                                 }
                             }
                         }
+                        pois = me.poisName;
+                        roads = me.roadName;
 
-                        // PhotoWall.prototype.passPhotoInfo(file);
+                        UpLoadPhotos.prototype.passPhotoInfo(file);
                     }
                 });
             }else{
                 formatted_address = "";
-                // PhotoWall.prototype.passPhotoInfo(file);
+                AMapGPS="";
+                UpLoadPhotos.prototype.passPhotoInfo(file);
             }
 
 
         }else {
             takenTime = "9999-01-01 00:00:00";
-            geo = "";
+            AMapGPS = "";
             formatted_address = "";
-            // PhotoWall.prototype.passPhotoInfo(file);
+            UpLoadPhotos.prototype.passPhotoInfo(file);
 
         }
     });
 };
 
+UpLoadPhotos.prototype.passPhotoInfo = function(file){
+    let me = this;
+    console.log(file.name,formatted_address,AMapGPS,takenTime,pois,roads);
+    $.ajax({
+        type:"POST",
+        url:"/SpatialDB-GeoPic-System/uploadPhotoExifDataServlet",
+        // dataType: 'json',
+        data:{
+            "data":JSON.stringify({
+                "photoName":file.name,
+                "formatted_address":formatted_address,
+                "AMapGPS":AMapGPS,
+                "takenTime":takenTime,
+                "pois":pois,
+                "roads":roads
+            }),
+            "userDbname":"db1",
+            "result":""
+        },
+        async:true,
+        success:function (res) {
+            let json = typeof res =='string'?JSON.parse(res):res;
+            console.log(json);
+            if(json.message =="success"){
+                console.log("dad")
+                me.getFaceInfo(file);
+            }
+
+        }
+    });
+
+};
 
 UpLoadPhotos.prototype.getFaceInfo = function (file) {
-    let  me = this;
-    me.faces = [];
+    var  me = this;
+    me.newfaces = [];
     let data = new FormData();
     data.append('api_key', "ms3MvC2UjwJBlSs5wNTVj-3SXPPAURq3");
     data.append('api_secret', "P6wgCmBYbeFGRG76cwTOTe6k2V5jS1vY");
@@ -175,7 +212,7 @@ UpLoadPhotos.prototype.getFaceInfo = function (file) {
             let json = typeof res=='string'?JSON.parse(res):res;
             let face_num = json.face_num;
             let faces = json.faces;
-            me.faces = [];
+            me.newfaces = [];
             me.face_tokens=[];
             if(face_num>0){
                 me.searchRes = [];
@@ -190,23 +227,110 @@ UpLoadPhotos.prototype.getFaceInfo = function (file) {
                         //me.face_tokens.push(faces[i].face_token);
                     }else{
                         me.addFace_tokenToFaceSet(faces[i].face_token);
-                        me.faces.push(faces[i]);
+                        me.newfaces.push(faces[i]);
                     }
                 }
                 console.log(me.searchRes)
-                if(me.faces.length>0||me.searchRes.length>0){
-                    let data = {};
-                    data["faces"] = me.faces;
-                    // me.uploadFaceInfo(data,file,me.searchRes);
+                let data = {};
+                if(me.newfaces.length>0||me.searchRes.length>0){
+
+                    data["faces"] = me.newfaces;
+                    // me.faces = data;
+                    console.log(me.newfaces)
+                    me.uploadFaceInfo(data,file,me.searchRes);
                 }
             }else{
                 console.log("no faceInfo")
             }
+
+
         },
         error:function (err) {
             console.log(err)
         }
     });
+};
+
+/**
+ * 将检测到的人脸信息传到后台
+ * @param faces face++ 人脸检测返回的人脸信息:face_token和face_rectangle(top,left,height,width)
+ */
+UpLoadPhotos.prototype.uploadFaceInfo = function(faces,file,face_tokens){
+    let me = this;
+    //console.log("faces IN ");
+    console.log(faces.faces.length);
+    console.log(faces)
+    console.log(face_tokens)
+    if(faces.faces.length==0){
+        me.uploadPhotoFaceId(file,"",face_tokens)
+    }else{
+        $.ajax({
+            type:'POST',
+            url:"/SpatialDB-GeoPic-System/uploadFaceInfoServlet",
+            // dateType:'json',
+            data:
+                {
+                    "faces":JSON.stringify(faces),
+                    "file":file.name,
+                    "userDbName":"db1"
+                },
+            success:function (res) {
+                let json = typeof res=='string'?JSON.parse(res):res;
+                console.log(json)
+                let facesData = json.facesBase64;
+                let facesPath = json.facesPath;
+                console.log(facesPath)
+                me.uploadPhotoFaceId(file,facesPath,face_tokens);
+                me.facesData = facesData;
+                me.facesPath = facesPath;
+                me.count = 0;
+                console.log(me.facesData.length);
+                if(me.facesData.length>0){
+                    me.showFaceModal(facesData[me.count],me.facesPath[me.count]);
+                }
+
+            },
+            error:function (err) {
+            }
+        });
+    }
+
+
+};
+
+/**
+ * 存储人脸标签，关联照片与人脸信息。
+ * @param file
+ * @param facesPath  人脸保存的路径
+ * @param face_tokens  人脸的唯一标识，face++返回的
+ */
+UpLoadPhotos.prototype.uploadPhotoFaceId = function(file,faces_Path,face_tokens){
+    let me = this;
+    let photoPath = "photoDataSet\\photos\\"+file.name;
+    let facesPath = typeof faces_Path =='undefined'? "":faces_Path;
+    let faceTokens = typeof face_tokens=='undefined'?"":face_tokens;
+
+    $.ajax({
+        url:"/SpatialDB-GeoPic-System/uploadPhotoLabelAndFaceIdServlet",
+        type:"POST",
+        data:{
+            "type":"faceId",
+            "photoPath": photoPath,
+            "facesPath":facesPath.toString(),
+            "faceTokens":faceTokens.toString(),
+            "userDbname":"db1",
+            "result":"",
+
+        },
+        success:function (res) {
+            console.log(res)
+        },
+        error:function (err) {
+            console.log(err)
+        }
+
+    });
+
 };
 
 /**
@@ -277,6 +401,74 @@ UpLoadPhotos.prototype.addFace_tokenToFaceSet = function(face_token){
         }
     });
 };
+
+UpLoadPhotos.prototype.showFaceModal=function(facesData,facesPath){
+    let me = this;
+    //这样直接设置图片路径有问题，因为浏览器对于静态资源的加载不是同步的，所以我们直接传入人脸的base64数据，这个数据由后台返回
+    let base64 = "data:image/jpeg;base64,"+facesData;
+    console.log("你执行了几次啊s"+facesPath);
+    console.log(base64)
+
+    $("#faceImg").attr("src",base64);
+    $("#smallFacemodal").modal("show")
+
+    $("#cancelInputFaceLabel").click(function () {
+        $(".modal").css({
+            display:"none"
+        });
+        if(me.count+1<me.facesData.length){
+            me.count +=1;
+            me.showFaceModal(me.facesData[me.count],me.facesPath[me.count]);
+        }
+    });
+    $("#sureInputFaceLabel").off("click").on('click', function () {
+        me.handelFaceLabel(facesPath);
+    });
+
+};
+
+/**
+ * 处理用户上传的人脸标签
+ * @param facesPath  该张人脸的保存路径
+ */
+UpLoadPhotos.prototype.handelFaceLabel= function(facesPath){
+    var me = this;
+    var faceLabel = $("#facelabelText").val();
+    console.log(faceLabel)
+    $.ajax({
+        url:"/SpatialDB-GeoPic-System/upLoadFaceLabelServlet",
+        type:"POST",
+        dataType:"json",
+        data:{
+            "faceLabel":faceLabel,
+            "facePath":facesPath,
+            "userDbname":"db1"
+        },
+        async:false,
+        success:function (res) {
+            console.log(res);
+            $("#smallFacemodal").modal("hide")
+
+            $("#faceImg").attr("src","");
+            $("#facelabelText").val("");
+            if(me.count+1<me.facesData.length){
+                me.count +=1;
+                me.showFaceModal(me.facesData[me.count],me.facesPath[me.count]);
+            }
+
+        },
+        error:function (err) {
+            console.log(err)
+            $("#smallFacemodal").modal("hide")
+
+            if(me.count+1<me.facesData.length){
+                me.count +=1;
+                me.showFaceModal(me.facesData[me.count],me.facesPath[me.count]);
+            }
+        }
+    });
+};
+
 
 
 

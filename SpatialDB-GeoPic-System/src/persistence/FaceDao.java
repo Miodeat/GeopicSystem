@@ -12,4 +12,5 @@ public interface FaceDao {
     public int getFaceIdAccordingFaceToken(FaceInfo faceInfo,UserInfo userInfo);
     public int getFaceIdAccordingFaceLabel(FaceInfo faceInfo,UserInfo userInfo);
 
+
 }

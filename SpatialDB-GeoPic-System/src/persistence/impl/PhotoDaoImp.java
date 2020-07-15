@@ -44,6 +44,8 @@ public class PhotoDaoImp implements PhotoDao {
      */
     public boolean insertPhotoInfo(PhotoInfo photoInfo, UserInfo userInfo) {
 
+//        System.out.println(userInfo.getUserDBName());
+        System.out.println(photoInfo.getRoads()+photoInfo.getPois()+photoInfo.getGeo()+photoInfo.getPhotoLabels());
         boolean insertPhotoInfoRes = false;
         Connection connection = null;
         try {
@@ -51,23 +53,25 @@ public class PhotoDaoImp implements PhotoDao {
             String insertPhotoInfoSql="";
             if(photoInfo.getGeo().equals("")){
                  insertPhotoInfoSql = "insert into photos(" +
-                        "formatted_address,takentime,photolabels,photopath,pois,roads,facesid values(" +
-                        "?,?,?,?,?,?,?)";
+                        "formatted_address,takentime,photolabels,photopath,pois,roads,facesid) values (?,?,'"+photoInfo.getPhotoLabels()+"',?,'"+photoInfo.getPois()+"','"+photoInfo.getRoads()+"','"+photoInfo.getFacesId()+"')";
+                 System.out.println(insertPhotoInfoSql);
             }else{
                 insertPhotoInfoSql = "insert into photos(" +
-                        "formatted_address,takentime,geo,photolabels,photopath,pois,roads,facesid values(" +
-                        "?,?,st_geomfromtext('"+photoInfo.getGeo()+"',3857),?,?,?,?,?)";
+                        "formatted_address,takentime,geo,photolabels,photopath,pois,roads,facesid) values (?,?,st_geomfromtext('"+photoInfo.getGeo()+"',3857),'"+ photoInfo.getPhotoLabels()+"',?,'"+photoInfo.getPois()+"','"+photoInfo.getRoads()+"','"+photoInfo.getFacesId()+"')";
+                System.out.println(insertPhotoInfoSql);
             }
             PreparedStatement preparedStatement = connection.prepareStatement(insertPhotoInfoSql);
             preparedStatement.setString(1,photoInfo.getFormatted_address());
             preparedStatement.setTimestamp(2,photoInfo.getTakenTime());
-            preparedStatement.setString(3,photoInfo.getPhotoLabels());
-            preparedStatement.setString(4,photoInfo.getPhotoPath());
-            preparedStatement.setString(5,photoInfo.getPois());
-            preparedStatement.setString(6,photoInfo.getRoads());
-            preparedStatement.setString(7,photoInfo.getFacesId());
+//            preparedStatement.setString(3,photoInfo.getPhotoLabels());
+            preparedStatement.setString(3,photoInfo.getPhotoPath());
+//            preparedStatement.setString(4,photoInfo.getPois());
+//            preparedStatement.setString(5,photoInfo.getRoads());
+//            preparedStatement.setString(7,photoInfo.getFacesId());
             int num =0;
+//            preparedStatement.
             num = preparedStatement.executeUpdate();
+            System.out.println(num);
             if(num>0){
                 insertPhotoInfoRes = true;
             }
@@ -387,6 +391,49 @@ public class PhotoDaoImp implements PhotoDao {
             e.printStackTrace();
         }
         return getPotoDeatilRes;
+    }
+
+    @Override
+    public int getPhotoIdAcoordintPhotoPath(PhotoInfo photoInfo, UserInfo userInfo) {
+        int photo_id = 0;
+        Connection conn = null;
+        try{
+            System.out.println("photo Pathinget "+photoInfo.getPhotoId());
+            String getPhotoIdAccordingPhotoPathSql = "select photo_id from photos " +
+                    "where photopath = '"+photoInfo.getPhotoPath()+"'";
+            conn = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            PreparedStatement preparedStatement = conn.prepareStatement(getPhotoIdAccordingPhotoPathSql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                photo_id = resultSet.getInt("photo_id");
+            }
+            UtilDao.closeConnection(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return photo_id;
+    }
+
+    @Override
+    public boolean insertPhotoFaceId(PhotoInfo photoInfo, UserInfo userInfo) {
+        boolean insertPhotoFaceIdRes = false;
+        Connection conn= null;
+        try{
+            conn = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            System.out.println(photoInfo.getFacesId());
+            String insertPhotoFaceIdSql = "update photos set facesid = '{"+photoInfo.getFacesId()+"}' where photo_id = "+photoInfo.getPhotoId();
+            System.out.println(insertPhotoFaceIdSql);
+            PreparedStatement preparedStatement = conn.prepareStatement(insertPhotoFaceIdSql);
+            int num = preparedStatement.executeUpdate();
+            System.out.println("人脸id"+num);
+            if(num>0){
+                insertPhotoFaceIdRes = true;
+            }
+            UtilDao.closeConnection(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertPhotoFaceIdRes;
     }
 
 

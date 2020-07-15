@@ -48,4 +48,49 @@
         <servlet-name>getPhotoDetailServlet</servlet-name>
         <url-pattern>/getPhotoDetailServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetPhotoDataServlet</servlet-name>
+        <servlet-class>servlets.GetPhotoDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetPhotoDataServlet</servlet-name>
+        <url-pattern>/GetPhotoDataServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>uploadPhotoExifDataServlet</servlet-name>
+        <servlet-class>servlets.uploadPhotoExifDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadPhotoExifDataServlet</servlet-name>
+        <url-pattern>/uploadPhotoExifDataServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>uploadFaceInfoServlet</servlet-name>
+        <servlet-class>servlets.uploadFaceInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadFaceInfoServlet</servlet-name>
+        <url-pattern>/uploadFaceInfoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>uploadPhotoLabelAndFaceIdServlet</servlet-name>
+        <servlet-class>servlets.uploadPhotoLabelAndFaceIdServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadPhotoLabelAndFaceIdServlet</servlet-name>
+        <url-pattern>/uploadPhotoLabelAndFaceIdServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>upLoadFaceLabelServlet</servlet-name>
+        <servlet-class>servlets.upLoadFaceLabelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>upLoadFaceLabelServlet</servlet-name>
+        <url-pattern>/upLoadFaceLabelServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -3,6 +3,10 @@ package servlets;
 import net.coobird.thumbnailator.Thumbnails;
 import net.sf.json.JSONObject;
 import sun.misc.BASE64Decoder;
+//import sun.misc.BASE64Decoder;
+//import sun.misc.BASE64Decoder;
+
+//import Decoder.BASE64Decoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,19 +35,16 @@ public class GetPhotoDataServlet extends HttpServlet {
 
         String imageName = temp[0];
         String imgStr = temp[1];
-        System.out.println(request.getSession().getServletContext().getRealPath(""));
-//        String path = "D:\\Projects\\WebGIS\\GeoPic\\GeoPic\\web\\static\\data\\photos\\";
 
-        String path = request.getServletContext().getRealPath("/")+"static\\data\\photos\\";
+        String imgDir = request.getServletContext().getRealPath("/").split("out")[0]+"img\\photoDataSet\\photos\\";
+        String imagePath = imgDir+imageName;
 
         //下面这个是打包发布时的路径
-//        String path = "/data/wwwroot/default/GeoPic_war/static/data/photos/";
 //        String path = "/usr/local/tomcat/webapps/GeoPic/static/data/photos/";
-        String imagePath = request.getServletContext().getRealPath("/")+"static\\data\\photos\\"+imageName;
 
         //下面这个是打包发布时的路径
 //        String imagePath = "/usr/local/tomcat/webapps/GeoPic/static/data/photos/"+imageName;
-        boolean judgeIsExistRes = judgeIsExist(imageName,path);
+        boolean judgeIsExistRes = judgeIsExist(imageName,imgDir);
         if(judgeIsExistRes){
             res.put("message","图片已存在，不重复入库");
             res.put("success",false);
@@ -59,15 +60,12 @@ public class GetPhotoDataServlet extends HttpServlet {
                         b[i]+=256;
                     }
                 }
-
-
-
                 System.out.println(imagePath);
                 OutputStream o = new FileOutputStream(imagePath);
                 o.write(b);
                 o.flush();
                 o.close();
-                res.put("message","可以入库");
+                res.put("message","success");
                 res.put("success",true);
                 out.write(res.toString());
             } catch (Exception e) {
