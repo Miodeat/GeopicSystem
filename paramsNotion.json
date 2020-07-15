@@ -61,7 +61,10 @@ data：{
 	- "takenTime",点击照片详情，获取的照片的拍摄时间
 	- "photoLabels",点击照片详情获取的照片的标签
 	- "facesId":点击照片详情获取照片中人脸的id，是一个字符串
-	- "facesPath":点击照片详情获取照片中人脸的路径，为一个array
+	- "facesPath":点击照片详情获取照片中人脸的路径，为一个array，里面每个元素是一个object，有两个key：facePath、faceLabel
+	- "lnglat":POI返回的高德的坐标的key
+
+
 
 
 3. 对于userDbname:登录时获取的用户数据库名称

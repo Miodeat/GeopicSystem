@@ -30,4 +30,5 @@ public interface PhotoDao {
     public boolean insertPhotoFaceId(PhotoInfo photoInfo,UserInfo userInfo);
 
 
+
 }

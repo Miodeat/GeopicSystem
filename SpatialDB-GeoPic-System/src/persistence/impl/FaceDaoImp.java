@@ -9,6 +9,7 @@ import javax.servlet.jsp.jstl.sql.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 
 public class FaceDaoImp implements FaceDao {
 
@@ -139,5 +140,29 @@ public class FaceDaoImp implements FaceDao {
             e.printStackTrace();
         }
         return faceId;
+    }
+
+    @Override
+    public HashMap<String, String> getFacePathAndLabel(int faceId,UserInfo userInfo) {
+        String facePath = "";
+        String faceLabel = "";
+        HashMap<String,String>facePathAndLabel = new HashMap<>();
+        Connection conn;
+        try{
+            String getFacePathSql = "select facepath,facelabel from face " +
+                    "where face_id = "+faceId +" limit 1";
+            conn = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            PreparedStatement preparedStatement = conn.prepareStatement(getFacePathSql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                facePath = resultSet.getString("facepath");
+                faceLabel = resultSet.getString("facelabel");
+                facePathAndLabel.put(facePath,faceLabel);
+            }
+            UtilDao.closeConnection(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return facePathAndLabel;
     }
 }

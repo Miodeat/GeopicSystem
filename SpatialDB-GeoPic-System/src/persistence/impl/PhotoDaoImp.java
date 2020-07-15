@@ -26,6 +26,7 @@ public class PhotoDaoImp implements PhotoDao {
 //            "玉树藏族自治州", "海西蒙古族藏族自治州", "阿里地区","阿克苏地区","喀什地区","和田地区","塔城地区", "阿勒泰地区"};
     private String []spectilCity= {"锡林郭勒盟","阿拉善盟"};
 
+
     @Override
     /**
      *  将照片上传至数据库：上传的数据有（
@@ -365,20 +366,24 @@ public class PhotoDaoImp implements PhotoDao {
                     " from photos where photopath = '"+photoPath+"'";
             PreparedStatement preparedStatement = connection.prepareStatement(getPhotoDeatilSql);
             ResultSet resultSet = preparedStatement.executeQuery();
+            JSONObject jsonObject = new JSONObject();
             while (resultSet.next()){
-                String formatted_address = resultSet.getString(1);
-                String takentime = resultSet.getTimestamp(2).toString();;
+                String formatted_address = resultSet.getString(2);
+                String takentime = resultSet.getTimestamp(1).toString();;
                 String GPS = resultSet.getString(3);
                 Array facesId = resultSet.getArray(4);
                 Array photoLabels = resultSet.getArray(5);
-                JSONArray AMapGPS = getGPSArray(GPS);
-                JSONObject jsonObject = new JSONObject();
+                JSONArray AMapGPS = new JSONArray();
+                if(GPS!=null&&!GPS.equals("")){
+                    AMapGPS  = getGPSArray(GPS);
+                }
                 jsonObject.put("formatted_address",formatted_address);
-                jsonObject.put("takentime",takentime);
-                jsonObject.put("AMapGPS",AMapGPS);
-                jsonObject.put("facesId",facesId);
-                jsonObject.put("photoLabels",photoLabels);
+                jsonObject.put("takenTime",takentime);
+                jsonObject.put("AMapGPS",AMapGPS.toString());
+                jsonObject.put("facesId",facesId.toString());
+                jsonObject.put("photoLabels",photoLabels.toString());
                 getPotoDeatilResArray.add(jsonObject);
+                jsonObject.clear();
             }
             if(getPotoDeatilResArray.size()>0){
                 getPotoDeatilRes.put("message","success");
@@ -528,7 +533,8 @@ public class PhotoDaoImp implements PhotoDao {
         JSONArray jsonGPSArray = new JSONArray();
         double lon = 0.0f;
         double lat = 0.0f;
-        if(!GPS.equals("")){
+        System.out.println(GPS);
+        if(!GPS.equals("")&&GPS!=null){
 //            System.out.println(GPS);
             String temp[]= GPS.split("\\(")[1].split(" ");
             lon = Double.parseDouble(temp[0]);
