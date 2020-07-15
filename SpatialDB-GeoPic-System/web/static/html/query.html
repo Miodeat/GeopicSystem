@@ -20,13 +20,15 @@
 <link rel="stylesheet" href="../vendors/selectFX/css/cs-skin-elastic.css">
 <link rel="stylesheet" href="../assets/css/style.css">
   <script type="text/javascript"
-          src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8&plugin=AMap.MarkerClusterer"></script>
+          src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8"></script>
 
   <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
   <script src="../js/MapControl.js"></script>
   <script src="../js/QueryPageControl.js"></script>
 
   <script>
+    let dbName = getParam("userDbName");
+
     function getParam(paramID){
       let urlAndParams = window.location.href.split("?");
       let params = urlAndParams[urlAndParams.length - 1];
@@ -39,11 +41,16 @@
         }
       }
     }
+
+    function toControlBoard(){
+      window.location.href = "index.html?userDbName=" + dbName;
+    }
+
+    function toDiscoveryPage(){
+      window.location.href = "discovery.html?userDbName=" + dbName;
+    }
+
     $(document).ready(function () {
-      let dbName = getParam("userDbName");
-      $("#toIndexPage").attr({
-        href: "index.html?userDbName=" + dbName
-      });
       let queryPageControl = new QueryPageControl(dbName);
     });
   </script>
@@ -56,14 +63,14 @@
   <nav class="navbar navbar-expand-sm navbar-default">
     <div class="navbar-header">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation"> <i class="fa fa-bars"></i> </button>
-      <a class="navbar-brand" href="./">GeoPic-System</a> <a class="navbar-brand hidden" href="./"><img src="../images/logo2.png" alt="Logo"></a> </div>
+      <a class="navbar-brand" href="javascript:void (0);">GeoPic-System</a> <a class="navbar-brand hidden" href="./"><img src="../images/logo2.png" alt="Logo"></a> </div>
     <div id="main-menu" class="main-menu collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"> <a href="" id="toIndexPage"> <i class="menu-icon fa fa-dashboard"></i>ControlBoard </a> </li>
+        <li class="active"> <a href="javascript:void(0);" onclick="toControlBoard()"> <i class="menu-icon fa fa-dashboard"></i>ControlBoard </a> </li>
         <h3 class="menu-title">&nbsp;FUNCTIONS</h3>
         <!-- /.menu-title -->
-        <li class="active"><a href=""> <i class="menu-icon fa fa-map-o"></i>Query 查询模块</a> </li>
-        <li class="active"> <a href="discovery.html"> <i class="menu-icon fa fa-street-view"></i>Discovery 探索模块</a> </li>
+        <li class="active"><a href="javascript:void(0);"> <i class="menu-icon fa fa-map-o"></i>Query 查询模块</a> </li>
+        <li class="active"> <a href="javascript:void(0);" onclick="toDiscoveryPage()"> <i class="menu-icon fa fa-street-view"></i>Discovery 探索模块</a> </li>
         <!-- /.menu-title -->
         
         <!-- /.menu-title -->

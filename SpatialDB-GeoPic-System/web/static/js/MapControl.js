@@ -22,6 +22,26 @@ MapControl.prototype.initAsPreview = function (photos) {
     me._loadMarkerCluster(photos);
 };
 
+MapControl.prototype.initAsDiscovery = function() {
+    let me = this;
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/SpatialDB-GeoPic-System/discoveryServlet",
+        data: {
+            data: {},
+            result: ["Name", "AMapGPS", "TypeCode", "Rating"]
+        },
+        success: function (res) {
+            if(res.message == "success"){
+                me._loadPOIMass(res.pois);
+            }
+            else {
+                alert(res.message);
+            }
+        }
+    })
+};
+
 MapControl.prototype.addQueryResult = function(startTime, endTime,
                                                loc, photoLabels,
                                                faces, userDbName){
@@ -41,7 +61,7 @@ MapControl.prototype.addQueryResult = function(startTime, endTime,
         data: {
             data: queryParams,
             result: returnType,
-            username: userDbName
+            userDbname: userDbName
         },
         success: function (res) {
             if(res.message == "success") {
@@ -64,6 +84,33 @@ MapControl.prototype._loadMarkerCluster = function (photos) {
             me._clusterRenderer(context);
         }
     })
+};
+
+MapControl.prototype._loadPOIMass = function (POIs) {
+    let me = this;
+
+    let style = {
+        url: 'https://a.amap.com/jsapi_demos/static/images/mass2.png',
+        anchor: new AMap.Pixel(3, 3),
+        size: new AMap.Size(5, 5)
+    };
+
+    let mass = new AMap.MassMarks(POIs, {
+        opacity: 0.8,
+        zIndex: 111,
+        cursor: 'pointer',
+        style: style
+    });
+
+    let marker = new AMap.Marker({content: ' ', map: me.map});
+
+    mass.on('mouseover', function (e) {
+        marker.setPosition(e.data.AMapGPS);
+        marker.setLabel({content: e.data.Name});
+    });
+
+    mass.setMap(me.map);
+
 };
 
 MapControl.prototype._clusterRenderer = function (context) {
