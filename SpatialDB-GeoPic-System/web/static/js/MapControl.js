@@ -22,18 +22,18 @@ MapControl.prototype.initAsPreview = function (photos) {
     me._loadMarkerCluster(photos);
 };
 
-MapControl.prototype.initAsDiscovery = function() {
+MapControl.prototype.initAsDiscovery = function(userDbName) {
     let me = this;
     $.ajax({
         type: "POST",
         url: "http://localhost:8080/SpatialDB-GeoPic-System/discoveryServlet",
         data: {
             data: {},
-            result: ["Name", "AMapGPS", "TypeCode", "Rating"]
+            result: ["Name", "lnglat", "TypeCode", "Rating"]
         },
         success: function (res) {
             if(res.message == "success"){
-                me._loadPOIMass(res.pois);
+                me._loadPOIMass(res.pois, userDbName);
             }
             else {
                 alert(res.message);
@@ -86,18 +86,18 @@ MapControl.prototype._loadMarkerCluster = function (photos) {
     })
 };
 
-MapControl.prototype._loadPOIMass = function (POIs) {
+MapControl.prototype._loadPOIMass = function (POIs, userDbName) {
     let me = this;
 
     let style = {
-        url: 'https://a.amap.com/jsapi_demos/static/images/mass2.png',
+        url: 'https://a.amap.com/jsapi_demos/static/images/mass1.png',
         anchor: new AMap.Pixel(3, 3),
         size: new AMap.Size(5, 5)
     };
 
     let mass = new AMap.MassMarks(POIs, {
         opacity: 0.8,
-        zIndex: 111,
+        zIndex: 10,
         cursor: 'pointer',
         style: style
     });
@@ -105,8 +105,17 @@ MapControl.prototype._loadPOIMass = function (POIs) {
     let marker = new AMap.Marker({content: ' ', map: me.map});
 
     mass.on('mouseover', function (e) {
-        marker.setPosition(e.data.AMapGPS);
+        marker.setPosition(e.data.lnglat);
         marker.setLabel({content: e.data.Name});
+        marker.show();
+    });
+
+    mass.on('mouseout', function (e) {
+        marker.hide();
+    });
+
+    mass.on('mousedown', function (e) {
+        me._getNearbyPhoto(e.data.lnglat, userDbName);
     });
 
     mass.setMap(me.map);
@@ -170,7 +179,7 @@ MapControl.prototype._loadMarkers = function (photos) {
 
     let markers = me._constructMarkerArray(photos);
     me.map.add(markers);
-    me.map.setFitView();
+    me.map.setFitView(markers);
 };
 
 MapControl.prototype._constructMarkerArray = function (photos) {
@@ -188,7 +197,7 @@ MapControl.prototype._constructMarkerArray = function (photos) {
             position: lngLat,
             anchor: "bottom-center",
             offset: new AMap.Pixel(0,0),
-            icon: "../../../img/" + photo.photoPath,
+            icon: "../../../img/" + photo.photoPath.replace(/\\/g, "/"),
             content: content
         });
         marker.on("click", function (e) {
@@ -205,11 +214,13 @@ MapControl.prototype._markerClick = function (photoPath) {
     $(".photoDetailModal-content-originPhoto").attr({
         src: photoPath
     });
+    let dbPhotoName = photoPath.slice(13);
+    console.log(dbPhotoName);
     let detailAjax = $.ajax({
         type: "POST",
         url: "http://localhost:8080/SpatialDB-GeoPic-System/getPhotoDetailServlet",
         data: {
-            photoPath: photoPath,
+            photoPath: dbPhotoName,
             dbname: me.dbname
         },
         success: function (res) {
@@ -220,11 +231,13 @@ MapControl.prototype._markerClick = function (photoPath) {
                 $(".photoInfo-takenPlace").val("拍摄地点："
                     + detail.formatted_address);
                 let faceList = $(".faces-list");
-                let facePaths = detail.facePath;
-                for(let i = 0, len = facePaths.length; i < len; i++){
-                    let facePath = facePaths[i];
+                let facesPaths = detail.facePath;
+                for(let i = 0, len = facesPaths.length; i < len; i++){
+                    let facePath = facesPaths[i];
+                    let faceImgUrl = "../../../img/"
+                        + facePath.facePath.replace(/\\/g, "/");
                     $("<li>").appendTo(faceList).css({
-                        background: "../../../img/" + facePath
+                        background:  faceImgUrl
                     })
                 }
                 $(".inputPhotoLabel").val(detail.photoLabels);
@@ -237,5 +250,28 @@ MapControl.prototype._markerClick = function (photoPath) {
 
     $.when(detailAjax).done(function () {
         $("#mediumModal").modal("show");
+    })
+};
+
+MapControl.prototype._getNearbyPhoto = function (lnglat, userDbName) {
+    let me = this;
+    $.ajax({
+        type: "POST",
+        data: {
+            data: {
+                lnglat: lnglat,
+            },
+            result: ["photoPath", "AMapGPS"],
+            userDbname: userDbName
+        },
+        success: function (res) {
+            if(res.message == "success"){
+                me._loadMarkers(res.photoPathAndGPS);
+            }
+            else{
+                alert(res.message);
+            }
+        }
+
     })
 };
