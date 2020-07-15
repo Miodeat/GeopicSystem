@@ -8,6 +8,7 @@ InitGeoPicDesktop = function (options) {
     me.userDbname = options;
     console.log(me.userDbname+"你还幼稚吗");
     me.getUserPhotosInfo();
+    me.te();
     me.mapControl = new MapControl({
         div: "map"
     });
@@ -55,5 +56,22 @@ InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCoun
     $(".placeCount").text(placeCount);
     me.mapControl.initAsPreview(photoPathAndGPS);
 };
+InitGeoPicDesktop.prototype.te= function () {
+    $.ajax({
+        url:"/SpatialDB-GeoPic-System/discoveryServlet",
+        type:"post",
+        data:{
+            "photoPath":"photoDataSet/photos/nm0583826_rm240883200_1969-2-7_2008.jpg",
+            "userDbname":"db1"
+        },
+        success:function (res) {
+            console.log(res)
+        },
+        error:function (err) {
+            console.log(err)
+        }
+    })
+}
+
 
 

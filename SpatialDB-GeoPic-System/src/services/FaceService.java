@@ -5,6 +5,8 @@ import domain.UserInfo;
 import persistence.FaceDao;
 import persistence.impl.FaceDaoImp;
 
+import java.util.HashMap;
+
 public class FaceService {
     private FaceDao faceDao;
 
@@ -41,6 +43,12 @@ public class FaceService {
     public boolean updateFaceLabelToDB(FaceInfo faceInfo,UserInfo userInfo){
         faceDao = new FaceDaoImp();
         return faceDao.updateFaceLabelToDB(faceInfo,userInfo);
+    }
+
+    //根据id获取facePath和faceLabel
+    public HashMap<String, String> getFacePathAndLabel(int faceId, UserInfo userInfo){
+        faceDao = new FaceDaoImp();
+        return faceDao.getFacePathAndLabel(faceId,userInfo);
     }
 }
 

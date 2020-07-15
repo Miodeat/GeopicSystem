@@ -93,4 +93,13 @@
         <servlet-name>upLoadFaceLabelServlet</servlet-name>
         <url-pattern>/upLoadFaceLabelServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>discoveryServlet</servlet-name>
+        <servlet-class>servlets.discoveryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>discoveryServlet</servlet-name>
+        <url-pattern>/discoveryServlet</url-pattern>
+    </servlet-mapping>
 </web-app>
