@@ -174,6 +174,7 @@ MapControl.prototype._loadMarkers = function (photos) {
 };
 
 MapControl.prototype._constructMarkerArray = function (photos) {
+    let me = this;
     let markers = [];
     for(let i = 0, len = photos.length; i < len; i++){
         let photo = photos[i];
@@ -190,7 +191,51 @@ MapControl.prototype._constructMarkerArray = function (photos) {
             icon: "../../../img/" + photo.photoPath,
             content: content
         });
+        marker.on("click", function (e) {
+            let photoPath = e.target.getIcon();
+            me._markerClick(photoPath);
+        });
         markers.push(marker);
     }
     return markers;
+};
+
+MapControl.prototype._markerClick = function (photoPath) {
+    let me = this;
+    $(".photoDetailModal-content-originPhoto").attr({
+        src: photoPath
+    });
+    let detailAjax = $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/SpatialDB-GeoPic-System/getPhotoDetailServlet",
+        data: {
+            photoPath: photoPath,
+            dbname: me.dbname
+        },
+        success: function (res) {
+            if(res.message == "success"){
+                let detail = res.photoDetail;
+                $(".photoInfo-takenTime").val("拍摄时间："
+                    + detail.takenTime);
+                $(".photoInfo-takenPlace").val("拍摄地点："
+                    + detail.formatted_address);
+                let faceList = $(".faces-list");
+                let facePaths = detail.facePath;
+                for(let i = 0, len = facePaths.length; i < len; i++){
+                    let facePath = facePaths[i];
+                    $("<li>").appendTo(faceList).css({
+                        background: "../../../img/" + facePath
+                    })
+                }
+                $(".inputPhotoLabel").val(detail.photoLabels);
+            }
+            else {
+                alert(res.message);
+            }
+        }
+    });
+
+    $.when(detailAjax).done(function () {
+        $("#mediumModal").modal("show");
+    })
 };

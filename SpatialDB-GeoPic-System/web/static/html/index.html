@@ -223,8 +223,58 @@
           <div id="map" class="col-xl-12" style="height: 265px;"></div>
         </div>
       </div>
-      <!-- /# card --> 
-      
+      <!-- /# card -->
+      <!--照片详细显示模态框-->
+      <div class="modal fade" id="mediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="mediumModalLabel">照片详情</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+            </div>
+
+            <!--模态框主体部分-->
+            <div class="modal-body">
+              <div class="photoDetailModal-content-left">
+                <!--@TODO：显示照片略缩图-->
+                <div class="photoDetailModal-content-originPhoto-box"> <img class="photoDetailModal-content-originPhoto" style="width:inherit"> </div>
+                <div class="photoDetailModal-content-left-photoInfo-box">
+
+				<span class="photoInfo-takenTime">拍摄时间：
+                </span>
+                  <span class="photoInfo-takenPlace">拍摄地点：
+                </span>
+                </div>
+              </div>
+              <div class="photoDetailModal-content-right">
+                <div class="photoDetailModal-content-right-personIncluded-title">&nbsp;&nbsp;包含的人物(最多显示9张）</div>
+                <!--@TODO：显示人脸-->
+                <div class="faces">
+                  <ul class="faces-list">
+                  </ul>
+                </div>
+
+                <!--@TODO:修改照片标签-->
+                <div class="">
+                  <div class="photoLabel-box"> <span>&nbsp;照片标签：</span>
+                    <input type="text" class="inputPhotoLabel" readonly="readonly" value="">
+                  </div>
+                </div>
+                <button class="btn btn-secondary" >编辑地址</button>
+                <button class="btn btn-secondary" >编辑标签</button>
+                <button class="btn btn-primary" >发布照片</button>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">确认</button>
+              </div>
+            </div>
+          </div>
+          <!-- .animated -->
+        </div>
+        <!-- .content -->
+      </div>
+
       <!--照片人脸检测模态框-->
       <div class="modal fade" id="smallFacemodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
