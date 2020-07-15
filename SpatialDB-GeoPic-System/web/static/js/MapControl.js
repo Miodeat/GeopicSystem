@@ -131,7 +131,11 @@ MapControl.prototype._constructMarkerArray = function (photos) {
     for(let i = 0, len = photos.length; i < len; i++){
         let photo = photos[i];
         let lngLat = new AMap.LngLat(photo.AMapGPS[0], photo.AMapGPS[1]);
-        let content = '<img src=\"../../../img/' + photo.photoPath + '\" width="30px"></img>';
+        let content = document.createElement("img");
+        content.setAttribute("src", "../../../img/" + photo.photoPath);
+        content.setAttribute("width", "30px");
+        content.style.border = "2px solid black";
+        content.style.borderRadius = "3px";
         let marker = new AMap.Marker({
             position: lngLat,
             anchor: "bottom-center",
