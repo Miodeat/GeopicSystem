@@ -6,6 +6,7 @@ public class FaceInfo {
     private String facePath;
     private String faceLabel;
     private String faceToken;
+    private int faceId;
 
     public void setFaceLabel(String faceLabel) {
         this.faceLabel = faceLabel;
@@ -29,5 +30,13 @@ public class FaceInfo {
 
     public void setFaceToken(String faceToken) {
         this.faceToken = faceToken;
+    }
+
+    public int getFaceId() {
+        return faceId;
+    }
+
+    public void setFaceId(int faceId) {
+        this.faceId = faceId;
     }
 }

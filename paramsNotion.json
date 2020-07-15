@@ -19,7 +19,8 @@ data：{
 	- "photoPath"：上传照片的路径
 	- "photoName"：上传照片的文件名
 	- "AMapGPS"：照片的地理位置
-	- "formatted_address":照片的格式化地址
+	- "formatted_address":照片的格式化地址，
+	- "takenTime":照片的拍摄时间
 	- "poi":照片周边的pois
 	- "road"：照片周边的roads
 	- "photoLabels":照片的标签
@@ -54,6 +55,13 @@ data：{
 	- "photoCount":初始化界面所有照片的数量
 	- "placeCount":初始化界面所去过地区的数量，以市级为统计单位
 	- "userDbname"
+	- "facesBase64AndPath":检测到的人脸的base64数据和路径
+	- "faceBase64",照片中人脸识别时，将人脸信息保存上传后传回的人脸照片的base64数据
+	- "facePath"：照片中人脸识别时，将人脸信息保存上传后传回的人脸照片的路径
+	- "takenTime",点击照片详情，获取的照片的拍摄时间
+	- "photoLabels",点击照片详情获取的照片的标签
+	- "facesId":点击照片详情获取照片中人脸的id，是一个字符串
+	- "facesPath":点击照片详情获取照片中人脸的路径，为一个array
 
 
-3. 对于username:登录时获取的用户名字，用来后台查询对应数据库的
+3. 对于userDbname:登录时获取的用户数据库名称

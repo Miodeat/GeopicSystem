@@ -24,6 +24,7 @@ public class FaceDaoImp implements FaceDao {
             while (resultSet.next()){
                 faceCount = resultSet.getInt(1);
             }
+            UtilDao.closeConnection(connection);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,12 +33,51 @@ public class FaceDaoImp implements FaceDao {
 
     @Override
     public boolean insertFaceInfoToDB(FaceInfo faceInfo,UserInfo userInfo) {
-        return false;
+        boolean insertRes = false;
+        Connection connection = null;
+        try {
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            String insertFaceInfoSql = "insert into face(face_id,facelabel, facepath,facetoken) values (?,?,?,'{"+faceInfo.getFaceToken()+"}')";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertFaceInfoSql);
+            preparedStatement.setInt(1,faceInfo.getFaceId());
+            preparedStatement.setString(2,faceInfo.getFaceLabel());
+            preparedStatement.setString(3,faceInfo.getFacePath());
+            int num = preparedStatement.executeUpdate();
+            if(num>0){
+                insertRes = true;
+            }
+            UtilDao.closeConnection(connection);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return insertRes;
     }
 
     @Override
     public boolean updateFaceLabelToDB(FaceInfo faceInfo,UserInfo userInfo) {
-        return false;
+
+        boolean updateFaceLabelResult = false;
+        Connection conn = null;
+        try{
+            System.out.println(faceInfo.getFacePath());
+            String updateFaceLabelSql = "update face set facelabel = '" +
+                    faceInfo.getFaceLabel()+"'"+
+                    " where facepath ='"+faceInfo.getFacePath()+"'";
+            conn = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            PreparedStatement preparedStatement = conn.prepareStatement(updateFaceLabelSql);
+            int result = preparedStatement.executeUpdate();
+            System.out.println(result);
+            if(result>0){
+                updateFaceLabelResult = true;
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updateFaceLabelResult;
+
     }
 
     @Override
@@ -48,11 +88,12 @@ public class FaceDaoImp implements FaceDao {
             conn = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
             String getFaceIdSql = "select face_id from face where facepath = '"+faceInfo.getFacePath()+"'limit 1";
             PreparedStatement preparedStatement = conn.prepareStatement(getFaceIdSql);
+
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 id = resultSet.getInt(1);
             }
-            conn.close();
+            UtilDao.closeConnection(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +114,7 @@ public class FaceDaoImp implements FaceDao {
             while(resultSet.next()){
                 id = resultSet.getInt(1);
             }
-            conn.close();
+            UtilDao.closeConnection(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,6 +134,7 @@ public class FaceDaoImp implements FaceDao {
             while(resultSet.next()){
                 faceId = resultSet.getInt("face_id");
             }
+            UtilDao.closeConnection(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }

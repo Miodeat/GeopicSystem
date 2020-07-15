@@ -25,5 +25,9 @@ public interface PhotoDao {
 
     public JSONObject getPhotoDetailAccordingPhotoPath(String photoPath,UserInfo userInfo);
 
+    public int getPhotoIdAcoordintPhotoPath(PhotoInfo photoInfo,UserInfo userInfo);
+
+    public boolean insertPhotoFaceId(PhotoInfo photoInfo,UserInfo userInfo);
+
 
 }

@@ -37,5 +37,10 @@ public class FaceService {
         faceDao = new FaceDaoImp();
         return faceDao.getFaceIdAccordingFaceLabel(faceInfo,userInfo);
     }
+
+    public boolean updateFaceLabelToDB(FaceInfo faceInfo,UserInfo userInfo){
+        faceDao = new FaceDaoImp();
+        return faceDao.updateFaceLabelToDB(faceInfo,userInfo);
+    }
 }
 
