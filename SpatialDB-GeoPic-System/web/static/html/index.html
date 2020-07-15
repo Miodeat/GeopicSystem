@@ -17,12 +17,16 @@
 <link rel="stylesheet" href="../vendors/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="../vendors/themify-icons/css/themify-icons.css">
 <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../vendors/jquery/dist/jquery.min.js"></script>
+  <script src="../assets/js/main.js"></script>
   <script type="text/javascript"
           src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8&plugin=AMap.MarkerClusterer"></script>
   <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="../js/initGeoPicDesktop.js"></script>
   <script src="../js/MapControl.js"></script>
-  <script src="../js/Upload.js"></script>
+  <script src="../../support/exif.js"></script>
+  <script src="../js/UpLoadPhotos.js"></script>
+<!--  <script src="../js/Upload.js"></script>-->
 </head>
 
   <script>
@@ -45,6 +49,7 @@
       });
       var initGeoPicDesktopServlet = new InitGeoPicDesktop(dbName);
     });
+    let uploadPhotos = new UpLoadPhotos();
   </script>
 </head>
 
@@ -159,7 +164,7 @@
         </div>
 
         <!--@TODO:上传照片-->
-        <footer class="twt-footer" ><input type="file" id="input_upload_driver" onchange="photoWall.uploadPhotos()" ></input></footer>
+        <footer class="twt-footer" ><input type="file" id="input_upload_driver" name="file" multiple="multiple" onchange="uploadPhotos.startToUpload()" ></input></footer>
       </section>
     </div>
     <div class="col-lg-4 col-xl-2">
