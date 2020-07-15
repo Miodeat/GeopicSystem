@@ -42,7 +42,6 @@ public class queryServlet extends HttpServlet {
         JSONObject res = photoService.getintegratedQueryPhotoPath("2018-07-07 00:00:00","10028-07-07 00:00:00",
                 "中南大学", handePhotoLabel(""),handFaceLabel(""),"db1");
 
-
         out.write(res.toString());
 
 
