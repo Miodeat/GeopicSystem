@@ -226,10 +226,8 @@ MapControl.prototype._markerClick = function (photoPath) {
         success: function (res) {
             if(res.message == "success"){
                 let detail = res.photoDetail;
-                $(".photoInfo-takenTime").val("拍摄时间："
-                    + detail.takenTime);
-                $(".photoInfo-takenPlace").val("拍摄地点："
-                    + detail.formatted_address);
+                $(".takenTime").val(detail.takenTime);
+                $(".takenPlace").val(detail.formatted_address);
                 let faceList = $(".faces-list");
                 let facesPaths = detail.facePath;
                 for(let i = 0, len = facesPaths.length; i < len; i++){
