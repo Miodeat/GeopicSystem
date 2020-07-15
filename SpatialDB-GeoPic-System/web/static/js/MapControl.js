@@ -22,7 +22,7 @@ MapControl.prototype.initAsPreview = function (photos) {
     me._loadMarkerCluster(photos);
 };
 
-MapControl.prototype.initAsDiscovery = function(userDbName) {
+MapControl.prototype.initAsDiscovery = function() {
     let me = this;
     $.ajax({
         type: "POST",
@@ -33,7 +33,7 @@ MapControl.prototype.initAsDiscovery = function(userDbName) {
         },
         success: function (res) {
             if(res.message == "success"){
-                me._loadPOIMass(res.pois, userDbName);
+                me._loadPOIMass(res.pois);
             }
             else {
                 alert(res.message);
@@ -86,7 +86,7 @@ MapControl.prototype._loadMarkerCluster = function (photos) {
     })
 };
 
-MapControl.prototype._loadPOIMass = function (POIs, userDbName) {
+MapControl.prototype._loadPOIMass = function (POIs) {
     let me = this;
 
     let style = {
@@ -115,7 +115,7 @@ MapControl.prototype._loadPOIMass = function (POIs, userDbName) {
     });
 
     mass.on('mousedown', function (e) {
-        me._getNearbyPhoto(e.data.lnglat, userDbName);
+        me._getNearbyPhoto(e.data.lnglat);
     });
 
     mass.setMap(me.map);
@@ -253,7 +253,7 @@ MapControl.prototype._markerClick = function (photoPath) {
     })
 };
 
-MapControl.prototype._getNearbyPhoto = function (lnglat, userDbName) {
+MapControl.prototype._getNearbyPhoto = function (lnglat) {
     let me = this;
     $.ajax({
         type: "POST",
@@ -262,7 +262,6 @@ MapControl.prototype._getNearbyPhoto = function (lnglat, userDbName) {
                 lnglat: lnglat,
             },
             result: ["photoPath", "AMapGPS"],
-            userDbname: userDbName
         },
         success: function (res) {
             if(res.message == "success"){
