@@ -2,7 +2,7 @@ MapControl = function (options) {
     let me = this;
 
     me.ops = options;
-    me._init()
+    me._init();
 };
 
 MapControl.prototype._init = function () {
@@ -37,14 +37,19 @@ MapControl.prototype.addQueryResult = function(startTime, endTime,
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/SpatialDB_GeoPic_System/queryServlet",
+        url: "http://localhost:8080/SpatialDB-GeoPic-System/queryServlet",
         data: {
             data: queryParams,
             result: returnType,
             username: userDbName
         },
-        success: function (photos) {
-            me._loadMarkers(photos);
+        success: function (res) {
+            if(res.message == "success") {
+                me._loadMarkers(res.photoPathAndGPS);
+            }
+            else {
+                alert(res.message);
+            }
         }
     });
 };
