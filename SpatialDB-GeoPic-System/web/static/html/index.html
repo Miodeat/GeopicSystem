@@ -29,6 +29,7 @@
     <script src="../js/MapControl.js"></script>
     <script src="../../support/exif.js"></script>
     <script src="../js/UpLoadPhotos.js"></script>
+    <script src="../js/PhotoDetailModal.js"></script>
     <!--  <script src="../js/Upload.js"></script>-->
 </head>
 
@@ -58,6 +59,7 @@
 
     $(document).ready(function () {
         var initGeoPicDesktopServlet = new InitGeoPicDesktop(dbName);
+        let pDetailControl = new PhotoDetailModal();
     });
 
     let uploadPhotos = new UpLoadPhotos();
@@ -286,14 +288,14 @@
                                         <input type="text" class="inputPhotoLabel" readonly="readonly" value="">
                                     </div>
                                 </div>
-                                <button class="btn btn-secondary">编辑地址</button>
-                                <button class="btn btn-secondary">编辑标签</button>
-                                <button class="btn btn-primary">发布照片</button>
+                                <button id="btnEditAdd" class="btn btn-secondary">编辑地址</button>
+                                <button id="btnEditLabel" class="btn btn-secondary">编辑标签</button>
+                                <button id="btnGoPublic" class="btn btn-primary">发布照片</button>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary">确认</button>
+                            <button type="button" id="btnOK" class="btn btn-primary">确认</button>
                         </div>
                     </div>
                 </div>

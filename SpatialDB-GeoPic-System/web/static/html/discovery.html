@@ -28,6 +28,7 @@
     <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
     <script src="../js/MapControl.js"></script>
     <script src="../js/DiscoveryControl.js"></script>
+    <script src="../js/PhotoDetailModal.js"></script>
     <script>
         let dbName = getParam("userDbName");
 
@@ -56,9 +57,10 @@
             let control = new DiscoveryControl({
                 div: "map"
             });
-
+            let pDetailControl = new PhotoDetailModal();
         });
     </script>
+
 
 </head>
 
@@ -211,14 +213,14 @@
                                         <input type="text" class="inputPhotoLabel" readonly="readonly" value="">
                                     </div>
                                 </div>
-                                <button class="btn btn-secondary">编辑地址</button>
-                                <button class="btn btn-secondary">编辑标签</button>
-                                <button class="btn btn-primary">发布照片</button>
+                                <button id="btnEditAdd" class="btn btn-secondary">编辑地址</button>
+                                <button id="btnEditLabel" class="btn btn-secondary">编辑标签</button>
+                                <button id="btnGoPublic" class="btn btn-primary">发布照片</button>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary">确认</button>
+                            <button type="button" id="btnOK" class="btn btn-primary">确认</button>
                         </div>
                     </div>
                 </div>
