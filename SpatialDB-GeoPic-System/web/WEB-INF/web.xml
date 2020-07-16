@@ -102,4 +102,13 @@
         <servlet-name>discoveryServlet</servlet-name>
         <url-pattern>/discoveryServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>getPhotosOfPoiServlet</servlet-name>
+        <servlet-class>servlets.getPhotosOfPoiServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>getPhotosOfPoiServlet</servlet-name>
+        <url-pattern>/getPhotosOfPoiServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

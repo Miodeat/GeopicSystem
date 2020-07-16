@@ -10,10 +10,7 @@ import persistence.UtilDao;
 
 
 import javax.servlet.jsp.jstl.sql.Result;
-import java.sql.Array;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -439,6 +436,69 @@ public class PhotoDaoImp implements PhotoDao {
             e.printStackTrace();
         }
         return insertPhotoFaceIdRes;
+    }
+
+    @Override
+    public  JSONObject updataPhotoInfo(String takenTime,String formatted_address, String photoLabels,String photoPath,int sharedFlag,UserInfo userInfo) {
+        JSONObject updatePhotoInfoRes = new JSONObject();
+        Connection connection = null;
+        try {
+            connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+            String updatePhotoInfoSql = "";
+            if(!formatted_address.equals("")){
+                if(!photoLabels.equals("")){
+                    if(!takenTime.equals("")){
+                        updatePhotoInfoSql = " update photos set formatted_address ='"+formatted_address+"',photolabels ='{"+photoLabels+"}'," +
+                                "takentime = '"+takenTime+"'";
+                    }else{
+                        updatePhotoInfoSql = " update photos set formatted_address ='"+formatted_address+"',photolabels ='{"+photoLabels+"}'";
+                    }
+                }else{
+                    if(!takenTime.equals("")){
+                        updatePhotoInfoSql = " update photos set formatted_address ='"+formatted_address+"',takentime = '"+takenTime+"'";
+                    }else{
+                        updatePhotoInfoSql = " update photos set formatted_address ='"+formatted_address+"'";
+                    }
+                }
+            }else{
+                if(!photoLabels.equals("")){
+                    if(!takenTime.equals("")){
+                        updatePhotoInfoSql = " update photos set photolabels ='{"+photoLabels+"}'," +
+                                "takentime = '"+takenTime+"'";
+                    }else{
+                        updatePhotoInfoSql = " update photos set photolabels ='{"+photoLabels+"}'";
+                    }
+                }else{
+                    if(!takenTime.equals("")){
+                        updatePhotoInfoSql = " update photos set takentime = '"+takenTime+"'";
+                    }else{
+                        return updatePhotoInfoRes;
+                    }
+                }
+            }
+
+            updatePhotoInfoSql+=" where photoPath '"+photoPath+"'";
+            System.out.println(updatePhotoInfoSql);
+
+//            if(sharedFlag==1){
+//                updatePhotoInfoSql += ", sharedflag = true where photopath = '"+photoPath+"'";
+//            }
+
+            PreparedStatement preparedStatement = connection.prepareStatement(updatePhotoInfoSql);
+            int num = 0;
+            num = preparedStatement.executeUpdate();
+            if(num>0){
+                updatePhotoInfoRes.put("message","success");
+            }else{
+                updatePhotoInfoRes.put("message","failure");
+            }
+            UtilDao.closeConnection(connection);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return updatePhotoInfoRes;
     }
 
 

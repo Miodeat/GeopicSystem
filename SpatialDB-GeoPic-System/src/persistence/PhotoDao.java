@@ -29,6 +29,7 @@ public interface PhotoDao {
 
     public boolean insertPhotoFaceId(PhotoInfo photoInfo,UserInfo userInfo);
 
+    public  JSONObject updataPhotoInfo(String takenTime,String formatted_address, String photoLabels,String photoPath,int sharedFlag,UserInfo userInfo);
 
 
 }

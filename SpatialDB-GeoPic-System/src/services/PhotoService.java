@@ -40,4 +40,9 @@ public class PhotoService{
         return  photoDao.insertPhotoFaceId(photoInfo,userInfo);
     }
 
+    public  JSONObject updatePhotoInfo(String takenTime,String formatted_address,
+                                       String photoLabels,String photoPath,int sharedFlag,UserInfo userInfo) {
+        photoDao = new PhotoDaoImp();
+        return photoDao.updataPhotoInfo(takenTime, formatted_address, photoLabels,photoPath, sharedFlag,userInfo);
+    }
 }

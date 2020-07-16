@@ -29,10 +29,11 @@ public class queryServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-//        String userDbname = request.getParameter("userDbname");
-//        System.out.println(userDbname);
-//        String data = request.getParameter("data");
-//        JSONObject jsonObject = JSONObject.fromObject(data);
+        String userDbname = request.getParameter("userDbname");
+        System.out.println(userDbname);
+        String data = request.getParameter("data");
+        JSONObject jsonObject = JSONObject.fromObject(data);
+        String startTime = "";
         userInfo = new UserInfo();
         userInfo.setUserDBName("db1");
         faceInfo = new FaceInfo();

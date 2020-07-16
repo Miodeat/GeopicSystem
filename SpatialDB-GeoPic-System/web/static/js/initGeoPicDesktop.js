@@ -58,10 +58,10 @@ InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCoun
 };
 InitGeoPicDesktop.prototype.te= function () {
     $.ajax({
-        url:"/SpatialDB-GeoPic-System/discoveryServlet",
+        url:"/SpatialDB-GeoPic-System/getPhotosOfPoiServlet",
         type:"post",
         data:{
-            "photoPath":"photoDataSet/photos/nm0583826_rm240883200_1969-2-7_2008.jpg",
+            "GPS":"POINT(126.60644296 44.27068958)",
             "userDbname":"db1"
         },
         success:function (res) {
