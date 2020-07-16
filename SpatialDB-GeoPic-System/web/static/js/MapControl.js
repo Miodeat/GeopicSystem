@@ -116,7 +116,8 @@ MapControl.prototype._loadPOIMass = function (POIs) {
 
     mass.on('mouseover', function (e) {
         marker.setPosition(e.data.lnglat);
-        marker.setLabel({content: e.data.Name + ",评分:" + e.data.Rating});
+        let rating = e.data.Rating == "" ? "暂无" : e.data.Rating;
+        marker.setLabel({content: e.data.Name + ",评分:" + rating});
         marker.show();
     });
 
