@@ -28,13 +28,8 @@ MapControl.prototype.initAsDiscovery = function() {
         type: "POST",
         url: "/SpatialDB-GeoPic-System/discoveryServlet",
         data: {
-<<<<<<< HEAD
             data: {},
             result: ["Name", "AMapGPS", "TypeCode", "Rating"]
-=======
-            "data": {},
-            "result": ["Name", "lnglat", "TypeCode", "Rating"]
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
         },
         success: function (res) {
             let json = typeof res=='string'?JSON.parse(res):res;
@@ -112,10 +107,6 @@ MapControl.prototype._loadPOIMass = function (POIs) {
     let marker = new AMap.Marker({content: ' ', map: me.map});
 
     mass.on('mouseover', function (e) {
-<<<<<<< HEAD
-        marker.setPosition(e.data.AMapGPS);
-        marker.setLabel({content: e.data.Name});
-=======
         marker.setPosition(e.data.lnglat);
         marker.setLabel({content: e.data.Name + ",评分:" + e.data.Rating});
         marker.show();
@@ -127,7 +118,6 @@ MapControl.prototype._loadPOIMass = function (POIs) {
 
     mass.on('mousedown', function (e) {
         me._getNearbyPhoto(e.data.lnglat);
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
     });
 
     mass.setMap(me.map);
@@ -194,12 +184,9 @@ MapControl.prototype._loadMarkers = function (photos, dbName) {
     me.map.setFitView();
 };
 
-<<<<<<< HEAD
-MapControl.prototype._constructMarkerArray = function (photos) {
-=======
+
 MapControl.prototype._constructMarkerArray = function (photos, dbName) {
     let me = this;
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
     let markers = [];
     for(let i = 0, len = photos.length; i < len; i++){
         let photo = photos[i];
@@ -216,11 +203,6 @@ MapControl.prototype._constructMarkerArray = function (photos, dbName) {
             icon: "../../../img/" + photo.photoPath,
             content: content
         });
-<<<<<<< HEAD
-        markers.push(marker);
-    }
-    return markers;
-=======
         marker.on("click", function (e) {
             let photoPath = e.target.getIcon();
             me._markerClick(photoPath, dbName);
@@ -293,5 +275,5 @@ MapControl.prototype._getNearbyPhoto = function (lnglat) {
         }
 
     })
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
+
 };
