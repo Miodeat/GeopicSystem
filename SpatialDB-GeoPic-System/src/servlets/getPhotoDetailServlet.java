@@ -26,14 +26,16 @@ public class getPhotoDetailServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        String photoPath1 = request.getParameter("photoPath");
-        System.out.println(photoPath1);
-        String photoPath ="";
-        System.out.println(photoPath1.indexOf("/"));
-        if(photoPath1.indexOf("/")>-1){
-            photoPath = photoPath1.replaceAll("/","\\\\");
-        }
-        System.out.println("hdj"+photoPath);
+        String photoPath = request.getParameter("photoPath");
+
+        System.out.println(photoPath+"前端传回来得");
+//        String photoPath ="";
+////        System.out.println(photoPath1.indexOf("/"));
+//        if(!photoPath1.equals("")&&photoPath1!=null){
+//            photoPath = photoPath1.replaceAll("/","\\\\");
+//        }
+
+        System.out.println("hdj"+photoPath+"我的");
 
         String userDbname = request.getParameter("userDbname");
         userInfo = new UserInfo();
@@ -42,16 +44,21 @@ public class getPhotoDetailServlet extends HttpServlet {
         photoService = new PhotoService();
         JSONObject getPhotoDetailRes =new JSONObject();
         getPhotoDetailRes =  photoService.getPhotoDetailAccordingPhotoPath(photoPath,userInfo);
+        System.out.println(getPhotoDetailRes);
         JSONArray photoDetailArray = getPhotoDetailRes.getJSONArray("photoDetail");
         JSONObject photoDetail = photoDetailArray.getJSONObject(0);
-        if(photoDetail.size()>0){
+
+        System.out.println("dsd"+photoDetail);
+        if(photoDetailArray.size()>0){
             photoDetail.put("message","success");
         }else{
             photoDetail.put("message","failure");
         }
-        String facesId = photoDetail.getString("facesId");
-        photoDetail.put("facesPath",getFacePathFromFaceId(facesId));
-
+        System.out.println("dssd"+photoDetail);
+//        String facesId = photoDetail.getString("facesId");
+//
+//        photoDetail.put("facesPath",getFacePathFromFaceId(facesId).toString());
+        System.out.println("dssds"+photoDetail);
         out.write(photoDetail.toString());
 
     }

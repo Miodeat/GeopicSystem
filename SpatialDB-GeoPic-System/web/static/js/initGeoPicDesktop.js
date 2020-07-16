@@ -8,7 +8,7 @@ InitGeoPicDesktop = function (options) {
     me.userDbname = options;
     console.log(me.userDbname+"你还幼稚吗");
     me.getUserPhotosInfo();
-    me.te();
+    // me.te();
     me.mapControl = new MapControl({
         div: "map"
     });

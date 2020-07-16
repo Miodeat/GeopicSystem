@@ -15,6 +15,7 @@
     <title>GeoPic-System</title>
     <meta name="description" content="GeoPic-System">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
     <link rel="shortcut icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="../vendors/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../vendors/font-awesome/css/font-awesome.min.css">
@@ -24,12 +25,13 @@
     <script src="../assets/js/main.js"></script>
     <script type="text/javascript"
             src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8&plugin=AMap.MarkerClusterer"></script>
-    <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
+
     <script type="text/javascript" src="../js/initGeoPicDesktop.js"></script>
     <script src="../js/MapControl.js"></script>
     <script src="../../support/exif.js"></script>
-    <script src="../js/UpLoadPhotos.js"></script>
+
     <script src="../js/PhotoDetailModal.js"></script>
+    <script src="../js/UpLoadPhotos.js"></script>
     <!--  <script src="../js/Upload.js"></script>-->
 </head>
 
@@ -61,8 +63,13 @@
         var initGeoPicDesktopServlet = new InitGeoPicDesktop(dbName);
         let pDetailControl = new PhotoDetailModal();
     });
+    var uploadPhotos;
+    $(document).ready(function () {
+        let uploadPhotos = new UpLoadPhotos();
+        uploadPhotos.startToUpload();
+    });
 
-    let uploadPhotos = new UpLoadPhotos();
+
 </script>
 </head>
 
@@ -194,7 +201,7 @@
 
                 <!--@TODO:上传照片-->
                 <footer class="twt-footer"><input type="file" id="input_upload_driver" name="file" multiple="multiple"
-                                                  onchange="uploadPhotos.startToUpload()"></input></footer>
+                                                  onchange=UpLoadPhotos.prototype.startToUpload();></input></footer>
             </section>
         </div>
         <div class="col-lg-4 col-xl-2">
@@ -210,26 +217,26 @@
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-      </div>
-      <!-- /# card --> 
-      
-      <!--照片人脸检测模态框-->
-      <div class="modal fade" id="smallFacemodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="smallmodalLabel">人脸信息</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
-            </div>
-            
-            <!--模态框主体部分-->
-            <div class="modal-body">
-              <div class="modal-info center-self-xy mYBounceInDown">
-                <div class="modal-face"> <img src="../images/admin.jpg"  class="center-self-xy" id="faceImg"> </div>
-                <div class="modal-label"> <span>请输入人物姓名:</span>
-                  <input type="text" class="form-control" id="facelabelText">
-=======
+<!--<<<<<<< HEAD-->
+<!--      </div>-->
+<!--      &lt;!&ndash; /# card &ndash;&gt; -->
+<!--      -->
+<!--      &lt;!&ndash;照片人脸检测模态框&ndash;&gt;-->
+<!--      <div class="modal fade" id="smallFacemodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-sm" role="document">-->
+<!--          <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--              <h5 class="modal-title" id="smallmodalLabel">人脸信息</h5>-->
+<!--              <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>-->
+<!--            </div>-->
+<!--            -->
+<!--            &lt;!&ndash;模态框主体部分&ndash;&gt;-->
+<!--            <div class="modal-body">-->
+<!--              <div class="modal-info center-self-xy mYBounceInDown">-->
+<!--                <div class="modal-face"> <img src="../images/admin.jpg"  class="center-self-xy" id="faceImg"> </div>-->
+<!--                <div class="modal-label"> <span>请输入人物姓名:</span>-->
+<!--                  <input type="text" class="form-control" id="facelabelText">-->
+<!--=======-->
         <div class="col-lg-4 offset-xl-0 col-xl-2">
             <div class="card">
                 <div class="card-body">
@@ -351,7 +358,7 @@
                         </button>
                         <button type="button" class="btn btn-primary" id="sureInputFaceLabel">确认</button>
                     </div>
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
+<!--&gt;>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2-->
                 </div>
             </div>
 

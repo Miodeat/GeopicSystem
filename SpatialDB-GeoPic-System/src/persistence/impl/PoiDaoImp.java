@@ -57,6 +57,7 @@ public class PoiDaoImp implements PoiDao {
         Connection connection = null;
         try{
             connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
+//            connection = UtilDao.getConnection_SysOpDB();
             String getPhotoOfPoisSql = "select * from photos" +
                     "  where ST_Distance(st_transform(st_setsrid(geo,4326),3857), st_transform(st_setsrid('"+
                     poiGPS+"'::geometry,4326),3857))<60000";

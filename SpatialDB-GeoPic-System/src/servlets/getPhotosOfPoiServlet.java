@@ -21,20 +21,43 @@ public class getPhotosOfPoiServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        String poiGPS = request.getParameter("lnglat");
+        String poiGPS = request.getParameter("lnglat").toString();
+        System.out.println(poiGPS);
         String dbname = request.getParameter("userDbname");
         userInfo = new UserInfo();
-        userInfo.setUserDBName(dbname);
-        System.out.println(dbname);
+        userInfo.setUserDBName("sysopdb");
+//        System.out.println(dbname);
         JSONObject res = new JSONObject();
-        poiService = new PoiService();
-        res = poiService.getPhotosOfPoi(poiGPS,userInfo);
-        System.out.println(res+"rs");
+        if(poiGPS.indexOf(",")>-1){
+            poiService = new PoiService();
+            res = poiService.getPhotosOfPoi(toWKT(poiGPS),userInfo);
+            System.out.println(res+"rs");
+        }else{
+            res.put("message","failure");
+        }
+
+
         out.write(res.toString());
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
+    }
+
+    protected String toWKT(String poiGPS ){
+        String wkt = "POINT";
+        if(poiGPS.indexOf(",")>-1){
+            String temp[] = poiGPS.split(",");
+            if(temp[0].indexOf("[")>-1){
+                String lon = temp[0].replace("[","(");
+                wkt = wkt+lon+" ";
+            }
+            if(temp[1].indexOf("]")>-1){
+                String lat = temp[1].replace("]",")");
+                wkt = wkt+lat;
+            }
+        }
+        return wkt;
     }
 }

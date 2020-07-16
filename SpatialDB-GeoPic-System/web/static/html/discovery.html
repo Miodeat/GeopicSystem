@@ -10,37 +10,7 @@
 <!--<![endif]-->
 
 <head>
-<<<<<<< HEAD
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>GeoPic-System</title>
-<meta name="description" content="GeoPic-System">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="shortcut icon" href="../images/favicon.ico">
-<link rel="stylesheet" href="../vendors/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="../vendors/font-awesome/css/font-awesome.min.css">
-<link rel="stylesheet" href="../vendors/themify-icons/css/themify-icons.css">
-<link rel="stylesheet" href="../vendors/flag-icon-css/css/flag-icon.min.css">
-<link rel="stylesheet" href="../vendors/selectFX/css/cs-skin-elastic.css">
-<link rel="stylesheet" href="../assets/css/style.css">
 
-  <script type="text/javascript"
-          src="https://webapi.amap.com/maps?v=1.4.15&key=0a2e5f7264c791daee51483cb024a8b8"></script>
-  <script type="text/javascript" src="../../support/jquery-3.4.1.min.js"></script>
-  <script src="../js/MapControl.js"></script>
-  <script>
-    let dbName = getParam("userDbName");
-
-    function getParam(paramID){
-      let urlAndParams = window.location.href.split("?");
-      let params = urlAndParams[urlAndParams.length - 1];
-      let paramList = params.split("&");
-      for (let i = 0, len = paramList.length; i < len; i++){
-        let param = paramList[i];
-        if(param.search(paramID) != -1){
-          let arr = param.split("=");
-          return arr[arr.length - 1];
-=======
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>GeoPic-System</title>
@@ -74,7 +44,6 @@
                     return arr[arr.length - 1];
                 }
             }
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
         }
 
         function toControlBoard() {
@@ -85,15 +54,6 @@
             window.location.href = "query.html?userDbName=" + dbName;
         }
 
-<<<<<<< HEAD
-    $(document).ready(function () {
-      let mapControl = new MapControl({
-        div: "map"
-      });
-      mapControl.initAsDiscovery();
-    });
-  </script>
-=======
         $(document).ready(function () {
             let control = new DiscoveryControl({
                 div: "map"
@@ -102,8 +62,6 @@
         });
     </script>
 
-
->>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
 </head>
 
 <body>

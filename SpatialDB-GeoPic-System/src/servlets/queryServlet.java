@@ -3,6 +3,8 @@ package servlets;
 import domain.FaceInfo;
 import domain.PhotoInfo;
 import domain.UserInfo;
+import jdk.nashorn.internal.scripts.JO;
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import org.opencv.photo.Photo;
 import services.FaceService;
@@ -31,14 +33,15 @@ public class queryServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String userDbname = request.getParameter("userDbname");
         System.out.println(userDbname);
-        String data = request.getParameter("data");
-        JSONObject jsonObject = JSONObject.fromObject(data);
-        System.out.println(jsonObject);
-        String startTime = jsonObject.getString("startTime");
-        String endTime = jsonObject.getString("endTime");
-        String address = jsonObject.getString("queryPlace");
-        String photoLabels = jsonObject.getString("queryPhotoLabel");
-        String queryFaceLabel = jsonObject.getString("queryFaceLabel");
+//        String data = request.getParameter("data");
+//        System.out.println("da"+data);
+//        JSONObject jsonObject = JSONObject.fromObject(data);
+//        System.out.println(jsonObject);
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        String address = request.getParameter("queryPlace");
+        String photoLabels = request.getParameter("queryPhotoLabel");
+        String queryFaceLabel = request.getParameter("queryFaceLabel");
         userInfo = new UserInfo();
         userInfo.setUserDBName("db1");
         faceInfo = new FaceInfo();
@@ -46,8 +49,10 @@ public class queryServlet extends HttpServlet {
         faceService = new FaceService();
         photoService = new PhotoService();
 
-        JSONObject res = photoService.getintegratedQueryPhotoPath("2018-07-07 00:00:00","10028-07-07 00:00:00",
-                "中南大学", handePhotoLabel(""),handFaceLabel(""),"db1");
+        JSONObject res = photoService.getintegratedQueryPhotoPath(startTime,endTime,address,handePhotoLabel(photoLabels),
+                handFaceLabel(queryFaceLabel),userDbname);
+//        JSONObject res = photoService.getintegratedQueryPhotoPath("2018-07-07 00:00:00","10028-07-07 00:00:00",
+//                "中南大学", handePhotoLabel(""),handFaceLabel(""),"db1");
         System.out.println(res);
         out.write(res.toString());
 
@@ -72,9 +77,9 @@ public class queryServlet extends HttpServlet {
                     facesid += String.valueOf(faceId);
                 }
             }
-
         }else{
-            facesid = faceLabel.trim();
+            faceInfo.setFaceLabel(faceLabel.trim());
+            facesid = String.valueOf(faceService.getFaceIdAccordingFaceLabel(faceInfo,userInfo));
         }
 
         return facesid;

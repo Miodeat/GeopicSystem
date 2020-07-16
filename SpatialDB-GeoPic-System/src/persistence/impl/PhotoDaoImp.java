@@ -270,7 +270,7 @@ public class PhotoDaoImp implements PhotoDao {
         JSONArray allphotoPathArray = new JSONArray();
         try{
             connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
-            String initGeoPicDesktopSql = "select photopath,st_astext(geo) ,formatted_address from photos limit 200";
+            String initGeoPicDesktopSql = "select photopath,st_astext(geo) ,formatted_address from photos limit 500 ";
             PreparedStatement preparedStatement = connection.prepareStatement(initGeoPicDesktopSql);
             ResultSet resultSet = preparedStatement.executeQuery();
             HashMap<String,String> getAllCities = new HashMap<>();
@@ -361,6 +361,7 @@ public class PhotoDaoImp implements PhotoDao {
             connection = UtilDao.getConnection_UserDB(userInfo.getUserDBName());
             String getPhotoDeatilSql = "select takentime,formatted_address,st_astext(geo),facesid,photolabels" +
                     " from photos where photopath = '"+photoPath+"'";
+            System.out.println(getPhotoDeatilSql);
             PreparedStatement preparedStatement = connection.prepareStatement(getPhotoDeatilSql);
             ResultSet resultSet = preparedStatement.executeQuery();
             JSONObject jsonObject = new JSONObject();
@@ -505,8 +506,16 @@ public class PhotoDaoImp implements PhotoDao {
     private  String getIntegratedQuerySql(String starttime, String endTime,
                                           String address, String photolabel, String facesid){
         String integratedQuerySql = "";
+        if(photolabel.equals("\"\"")){
+            photolabel = "";
+        }
 
         String photolabels = photolabel;
+        System.out.println(facesid);
+        if(facesid.indexOf("-1")>-1){
+            facesid="";
+        }
+        System.out.println(photolabels);
         if((!starttime.equals(""))&&(!endTime.equals(""))){
             if(!address.equals("")){
                 if(!photolabel.equals("")){

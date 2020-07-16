@@ -21,6 +21,7 @@ UpLoadPhotos = function (options) {
  */
 UpLoadPhotos.prototype.startToUpload = function () {
     let me = this;
+    console.log("daddad")
     me.passPhotoData();
 };
 
@@ -31,6 +32,7 @@ UpLoadPhotos.prototype.passPhotoData = function () {
     let me = this;
     me.isExist = false;
     let files = document.getElementById("input_upload_driver").files;
+
 
     for(let i = 0;i<files.length;i++){
         let file =files[i];
