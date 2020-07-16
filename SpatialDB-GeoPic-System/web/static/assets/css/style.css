@@ -2523,7 +2523,7 @@ header .form-inline {
 .photoDetailModal-content-left-photoInfo-box{
     margin-top: 25px;
 }
-.photoInfo-takenTime,.photoInfo-takenPlace{
+.photoTakenTime-box,.photoTakenPlace-box{
     display: block;
     font-size: 16px;
     position: absolute;
@@ -2532,7 +2532,7 @@ header .form-inline {
 }
 
 
-.photoInfo-takenPlace{
+.photoTakenPlace-box{
     margin-top: 35px;
 }
 .photoDetailModal-content-right-personIncluded-title{
@@ -2579,6 +2579,17 @@ header .form-inline {
 .btnModifyPhotoLabel{
     margin-right: 20px;
 }
+
+.takenTimeLabel, .takenPlaceLabel{
+  width: 40%;
+  float: left;
+}
+
+.takenTime, .takenPlace{
+  width: 60%;
+  float: left;
+}
+
 
 
 

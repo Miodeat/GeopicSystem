@@ -26,17 +26,11 @@ QueryPageControl.prototype.doQuery = function () {
     let startDateStr = $("#startTime").val();
     let endDateStr = $("#endTime").val();
 
-    let startDate = new Date(startDateStr);
-    let endDate = new Date(endDateStr);
-
-    let startDateTS = startDate.getTime();
-    let endDateTS = endDate.getTime();
-
     let loc = $("#address").val();
     let photoLabels = $("#photoLabels").val();
     let faces = $("#faceLabels").val();
 
-    me.mapControl.addQueryResult(startDateTS, endDateTS, loc,
+    me.mapControl.addQueryResult(startDateStr, endDateStr, loc,
         photoLabels, faces, me.dbName);
 };
 

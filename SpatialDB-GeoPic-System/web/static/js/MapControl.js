@@ -16,27 +16,33 @@ MapControl.prototype._init = function () {
     })
 };
 
-MapControl.prototype.initAsPreview = function (photos) {
+MapControl.prototype.initAsPreview = function (photos, dbName) {
     let me = this;
 
-    me._loadMarkerCluster(photos);
+    me._loadMarkerCluster(photos, dbName);
 };
 
 MapControl.prototype.initAsDiscovery = function() {
     let me = this;
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/SpatialDB-GeoPic-System/discoveryServlet",
+        url: "/SpatialDB-GeoPic-System/discoveryServlet",
         data: {
+<<<<<<< HEAD
             data: {},
             result: ["Name", "AMapGPS", "TypeCode", "Rating"]
+=======
+            "data": {},
+            "result": ["Name", "lnglat", "TypeCode", "Rating"]
+>>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
         },
         success: function (res) {
-            if(res.message == "success"){
-                me._loadPOIMass(res.pois);
+            let json = typeof res=='string'?JSON.parse(res):res;
+            if(json.message == "success"){
+                me._loadPOIMass(json.poiDetail);
             }
             else {
-                alert(res.message);
+                alert(json.message);
             }
         }
     })
@@ -47,37 +53,38 @@ MapControl.prototype.addQueryResult = function(startTime, endTime,
                                                faces, userDbName){
     let me = this;
     let queryParams = {
-        startTime: startTime,
-        endTime: endTime,
-        queryPlace: loc,
-        queryPhotoLabel: photoLabels,
-        queryFaceLabel: faces
+        "startTime": startTime,
+        "endTime": endTime,
+        "queryPlace": loc,
+        "queryPhotoLabel": photoLabels,
+        "queryFaceLabel": faces
     };
     let returnType = ["photoPath", "AMapGPS"];
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/SpatialDB-GeoPic-System/queryServlet",
+        url: "/SpatialDB-GeoPic-System/queryServlet",
         data: {
-            data: queryParams,
-            result: returnType,
-            userDbname: userDbName
+            "data": queryParams,
+            "result": returnType,
+            "userDbname": userDbName
         },
         success: function (res) {
-            if(res.message == "success") {
-                me._loadMarkers(res.photoPathAndGPS);
+            let json = typeof res=='string'?JSON.parse(res):res;
+            if(json.message == "success") {
+                me._loadMarkers(json.photoPathAndGPS, userDbName);
             }
             else {
-                alert(res.message);
+                alert(json.message);
             }
         }
     });
 };
 
-MapControl.prototype._loadMarkerCluster = function (photos) {
+MapControl.prototype._loadMarkerCluster = function (photos, dbName) {
     let me = this;
 
-    let markers = me._constructMarkerArray(photos);
+    let markers = me._constructMarkerArray(photos, dbName);
     me.markerCluster = new AMap.MarkerClusterer(me.map, markers, {
         zoomOnClick: false,
         renderClusterMarker: function (context) {
@@ -105,8 +112,22 @@ MapControl.prototype._loadPOIMass = function (POIs) {
     let marker = new AMap.Marker({content: ' ', map: me.map});
 
     mass.on('mouseover', function (e) {
+<<<<<<< HEAD
         marker.setPosition(e.data.AMapGPS);
         marker.setLabel({content: e.data.Name});
+=======
+        marker.setPosition(e.data.lnglat);
+        marker.setLabel({content: e.data.Name + ",评分:" + e.data.Rating});
+        marker.show();
+    });
+
+    mass.on('mouseout', function (e) {
+        marker.hide();
+    });
+
+    mass.on('mousedown', function (e) {
+        me._getNearbyPhoto(e.data.lnglat);
+>>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
     });
 
     mass.setMap(me.map);
@@ -165,15 +186,20 @@ MapControl.prototype._clusterRenderer = function (context) {
     context.marker.setContent(container);
 };
 
-MapControl.prototype._loadMarkers = function (photos) {
+MapControl.prototype._loadMarkers = function (photos, dbName) {
     let me = this;
 
-    let markers = me._constructMarkerArray(photos);
+    let markers = me._constructMarkerArray(photos, dbName);
     me.map.add(markers);
     me.map.setFitView();
 };
 
+<<<<<<< HEAD
 MapControl.prototype._constructMarkerArray = function (photos) {
+=======
+MapControl.prototype._constructMarkerArray = function (photos, dbName) {
+    let me = this;
+>>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
     let markers = [];
     for(let i = 0, len = photos.length; i < len; i++){
         let photo = photos[i];
@@ -190,7 +216,82 @@ MapControl.prototype._constructMarkerArray = function (photos) {
             icon: "../../../img/" + photo.photoPath,
             content: content
         });
+<<<<<<< HEAD
         markers.push(marker);
     }
     return markers;
+=======
+        marker.on("click", function (e) {
+            let photoPath = e.target.getIcon();
+            me._markerClick(photoPath, dbName);
+        });
+        markers.push(marker);
+    }
+    return markers;
+};
+
+MapControl.prototype._markerClick = function (photoPath, dbName) {
+    let me = this;
+    $(".photoDetailModal-content-originPhoto").attr({
+        src: photoPath
+    });
+    let dbPhotoName = photoPath.slice(13);
+    console.log(dbPhotoName);
+    let detailAjax = $.ajax({
+        type: "POST",
+        url: "/SpatialDB-GeoPic-System/getPhotoDetailServlet",
+        data: {
+            "photoPath": dbPhotoName,
+            "userDbname": dbName,
+        },
+        success: function (res) {
+            let json = typeof res=='string'?JSON.parse(res):res;
+            if(json.message == "success"){
+                let detail = json.photoDetail;
+                $(".takenTime").val(detail.takenTime);
+                $(".takenPlace").val(detail.formatted_address);
+                let faceList = $(".faces-list");
+                let facesPaths = detail.facePath;
+                for(let i = 0, len = facesPaths.length; i < len; i++){
+                    let facePath = facesPaths[i];
+                    let faceImgUrl = "../../../img/"
+                        + facePath.facePath.replace(/\\/g, "/");
+                    $("<li>").appendTo(faceList).css({
+                        background:  faceImgUrl
+                    })
+                }
+                $(".inputPhotoLabel").val(detail.photoLabels);
+            }
+            else {
+                alert(json.message);
+            }
+        }
+    });
+
+    $.when(detailAjax).done(function () {
+        $("#mediumModal").modal("show");
+    })
+};
+
+MapControl.prototype._getNearbyPhoto = function (lnglat) {
+    let me = this;
+    $.ajax({
+        type: "POST",
+        data: {
+            "data": {
+                "lnglat": lnglat,
+            },
+            "result": ["photoPath", "AMapGPS"],
+        },
+        success: function (res) {
+            if(res.message == "success"){
+                me._loadMarkers(res.photoPathAndGPS);
+            }
+            else{
+                alert(res.message);
+            }
+        }
+
+    })
+>>>>>>> 213a161e76707eba937e0ad8e1a1b9276f3f63e2
 };

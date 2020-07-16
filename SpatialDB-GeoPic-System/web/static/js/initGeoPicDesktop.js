@@ -54,7 +54,7 @@ InitGeoPicDesktop.prototype.setInitGeoPicDesktop = function (photoCount,faceCoun
     $(".photoCount").text(photoCount);
     $(".faceCount").text(faceCount);
     $(".placeCount").text(placeCount);
-    me.mapControl.initAsPreview(photoPathAndGPS);
+    me.mapControl.initAsPreview(photoPathAndGPS, me.userDbname);
 };
 InitGeoPicDesktop.prototype.te= function () {
     $.ajax({
@@ -71,7 +71,7 @@ InitGeoPicDesktop.prototype.te= function () {
             console.log(err)
         }
     })
-}
+};
 
 
 
