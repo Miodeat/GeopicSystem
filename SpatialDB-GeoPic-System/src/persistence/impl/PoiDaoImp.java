@@ -1,5 +1,6 @@
 package persistence.impl;
 
+import domain.PhotoInfo;
 import domain.UserInfo;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
@@ -30,7 +31,7 @@ public class PoiDaoImp implements PoiDao {
                 String TypeCode =  resultSet.getString(3);
                 String Rating =resultSet.getString(4);
                 jsonObject.put("Name",Name);
-                jsonObject.put("lnglat",lnglat);
+                jsonObject.put("lnglat",getGPSArray(lnglat));
                 jsonObject.put("TypeCode",TypeCode);
                 jsonObject.put("Rating",Rating);
                 allPoisInfoArray.add(jsonObject);
@@ -88,5 +89,26 @@ public class PoiDaoImp implements PoiDao {
         }
 
         return photosOfpoiRes;
+    }
+
+    @Override
+    public JSONObject insertSharedPhotos(PhotoInfo photoInfo, UserInfo userInfo) {
+        return null;
+    }
+
+    private JSONArray getGPSArray(String GPS){
+        JSONArray jsonGPSArray = new JSONArray();
+        double lon = 0.0f;
+        double lat = 0.0f;
+        System.out.println(GPS);
+        if(!GPS.equals("")&&GPS!=null){
+//            System.out.println(GPS);
+            String temp[]= GPS.split("\\(")[1].split(" ");
+            lon = Double.parseDouble(temp[0]);
+            lat = Double.parseDouble(temp[1].split("\\)")[0]);
+        }
+        jsonGPSArray.add(lon);
+        jsonGPSArray.add(lat);
+        return jsonGPSArray;
     }
 }

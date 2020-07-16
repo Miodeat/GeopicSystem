@@ -33,16 +33,22 @@ public class queryServlet extends HttpServlet {
         System.out.println(userDbname);
         String data = request.getParameter("data");
         JSONObject jsonObject = JSONObject.fromObject(data);
-        String startTime = "";
+        System.out.println(jsonObject);
+        String startTime = jsonObject.getString("startTime");
+        String endTime = jsonObject.getString("endTime");
+        String address = jsonObject.getString("queryPlace");
+        String photoLabels = jsonObject.getString("queryPhotoLabel");
+        String queryFaceLabel = jsonObject.getString("queryFaceLabel");
         userInfo = new UserInfo();
         userInfo.setUserDBName("db1");
         faceInfo = new FaceInfo();
         photoInfo = new PhotoInfo();
         faceService = new FaceService();
         photoService = new PhotoService();
+
         JSONObject res = photoService.getintegratedQueryPhotoPath("2018-07-07 00:00:00","10028-07-07 00:00:00",
                 "中南大学", handePhotoLabel(""),handFaceLabel(""),"db1");
-
+        System.out.println(res);
         out.write(res.toString());
 
 
